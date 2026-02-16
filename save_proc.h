@@ -1,28 +1,25 @@
 #ifndef SAVE_PROC_H
 #define SAVE_PROC_H
 
-#include "nitro_types.h"
+#include <stdio.h>
 
-#define SAVE_FILE_INPUT_SIZE  (0xC0)
-#define SAVE_FILE_OUTPUT_SIZE  (SAVE_FILE_INPUT_SIZE - 8)
-
-typedef struct {
-    u32   decoded_save_data_len;
-    u16*  decoded_save_data;
-    u16*  raw_save_data;
-    u32   status;
-    u32   lock_id;
-} SaveCtx;
+#define SAVE_FILE_SIZE  (0x200)
+#define SAVE_ENCODED_SIZE  (0xC0)
+#define SAVE_DECODED_SIZE  (SAVE_ENCODED_SIZE - 0x8)
 
 enum {
-    SAVE_STATUS_OK = 1,
-    SAVE_STATUS_READ_FAIL = -1,
-    SAVE_STATUS_SIGNATURE_MISMATCH = -2,
-    SAVE_STATUS_CHECKSUM_MISMATCH = -3
+	SAVE_STATUS_OK,
+	SAVE_STATUS_SIGNATURE_MISMATCH,
+	SAVE_STATUS_CHECKSUM_MISMATCH
 };
 
-extern SaveCtx gSaveCtx;
+int WD_EncodeSaveData(void* encoded_dst, void* decoded_src);
+int WD_DecodeSaveData(void* decoded_dst, void* encoded_src);
 
-void InitSaveData(void);
+int WD_ImportSaveFile(void* encoded_dst, FILE* sav_src);
+int WD_ExportSaveFile(FILE* sav_dst, void* encoded_src);
+
+int WD_ImportDataFile(void* decoded_dst, FILE* bin_src);
+int WD_ExportDataFile(FILE* bin_dst, void* decoded_src);
 
 #endif

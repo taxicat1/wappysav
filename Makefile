@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -O3
+CFLAGS := -O3 -Wno-unused-result
 
 C_FILES := $(wildcard *.c)
 H_FILES := $(wildcard *.h)
