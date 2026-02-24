@@ -1,5 +1,4 @@
 #include "save_proc.h"
-#include "nitro_types.h"
 
 // Decomp scratches:
 // https://decomp.me/scratch/N4wyL
@@ -7,50 +6,60 @@
 // https://decomp.me/scratch/TlfBx
 
 #define SAVE_FILE_SIGNATURE  (0x2D472D47)
-#define CHECKSUM_KEY  (0x0000)
+#define CHECKSUM_KEY         (0x0000)
 
-#define SAVE_FILE_SIZE  (0x200)
 #define SAVE_ENCODED_SIZE  (0xC0)
 #define SAVE_DECODED_SIZE  (SAVE_ENCODED_SIZE - 0x8)
-#define SAVE_PADDED_SIZE  (0x100)
+#define SAVE_PADDED_SIZE   (0x100)
 
 
-static void decodeHwords(u16* dst, u16* src, u32 length, u16 key) {
-	key ^= 0x4741;
-	for (int i = 0; i < length / 2; i++) {
-		u16 hword = *src++;
-		*dst++ = hword ^ key;
-		key = hword;
-	}
+// Read/write little-endian data from pointer, don't alter pointer
+
+static inline uint32_t get32(const uint8_t* data) {
+	uint32_t ret = *data++;
+	ret |= *data++ << 8;
+	ret |= *data++ << 16;
+	ret |= *data << 24;
+	return ret;
 }
 
 
-static void encodeHwords(u16* dst, u16* src, u32 length, u16 key) {
-	key ^= 0x4741;
-	for (int i = 0; i < length / 2; i++) {
-		u16 hword = *src++;
-		key ^= hword;
-		*dst++ = key;
-	}
+static inline uint16_t get16(const uint8_t* data) {
+	uint16_t ret = *data++;
+	ret |= *data << 8;
+	return ret;
 }
 
 
-static u32 generateChecksum(void* save_data, int length) {
-	u8* datap = (u8*)save_data;
-	
-	u32 checksum = 0;
-	while (length > 0) {
-		u32 shift = ((u32)length << 30) >> 27;
-		checksum += *datap++ << shift;
-		length--;
-	}
-	return checksum;
+static inline uint8_t get8(const uint8_t* data) {
+	return *data;
+}
+
+
+static inline void put32(uint8_t* data, uint32_t value) {
+	*data++ = value;
+	*data++ = value >> 8;
+	*data++ = value >> 16;
+	*data = value >> 24;
+}
+
+
+static inline void put16(uint8_t* data, uint16_t value) {
+	*data++ = value;
+	*data = value >> 8;
+}
+
+
+static inline void put8(uint8_t* data, uint8_t value) {
+	*data = value;
 }
 
 
 
-static u32 read32(const u8** datap) {
-	u32 ret = *(*datap)++;
+// Read/write little-endian data from data pointer, increment pointer accordingly
+
+static inline uint32_t read32(const uint8_t** datap) {
+	uint32_t ret = *(*datap)++;
 	ret |= *(*datap)++ << 8;
 	ret |= *(*datap)++ << 16;
 	ret |= *(*datap)++ << 24;
@@ -58,40 +67,119 @@ static u32 read32(const u8** datap) {
 }
 
 
-static u16 read16(const u8** datap) {
-	u16 ret = *(*datap)++;
+static inline uint16_t read16(const uint8_t** datap) {
+	uint16_t ret = *(*datap)++;
 	ret |= *(*datap)++ << 8;
 	return ret;
 }
 
 
-static u8 read8(const u8** datap) {
+static inline uint8_t read8(const uint8_t** datap) {
 	return *(*datap)++;
 }
 
 
-static void write32(u8** datap, u32 data) {
-	*(*datap)++ = data & 0xFF;
-	*(*datap)++ = (data >> 8) & 0xFF;
-	*(*datap)++ = (data >> 16) & 0xFF;
-	*(*datap)++ = (data >> 24) & 0xFF;
+static inline void write32(uint8_t** datap, uint32_t value) {
+	*(*datap)++ = value;
+	*(*datap)++ = value >> 8;
+	*(*datap)++ = value >> 16;
+	*(*datap)++ = value >> 24;
 }
 
 
-static void write16(u8** datap, u16 data) {
-	*(*datap)++ = data & 0xFF;
-	*(*datap)++ = (data >> 8) & 0xFF;
+static inline void write16(uint8_t** datap, uint16_t value) {
+	*(*datap)++ = value;
+	*(*datap)++ = value >> 8;
 }
 
 
-static void write8(u8** datap, u8 data) {
-	*(*datap)++ = data;
+static inline void write8(uint8_t** datap, uint8_t value) {
+	*(*datap)++ = value;
 }
 
 
-static void deserialize(WDSave* dst, const void* decoded_src) {
-	const u8* src_bytes = (const u8*)decoded_src;
+
+// Functions for save file encoding and decoding
+
+static void encodeXor(uint8_t* encoded_dst, const uint8_t* decoded_src, int length, uint16_t key) {
+	key ^= 0x4741;
+	for (int i = 0; i < length / 2; i++) {
+		uint16_t hword = read16(&decoded_src);
+		hword ^= key;
+		write16(&encoded_dst, hword);
+		key = hword;
+	}
+}
+
+
+static void decodeXor(uint8_t* decoded_dst, const uint8_t* encoded_src, int length, uint16_t key) {
+	key ^= 0x4741;
+	for (int i = 0; i < length / 2; i++) {
+		uint16_t hword = read16(&encoded_src);
+		write16(&decoded_dst, hword ^ key);
+		key = hword;
+	}
+}
+
+
+static uint32_t generateChecksum(const uint8_t* save_data, int length) {
+	uint32_t checksum = 0;
+	while (length > 0) {
+		int shift = (length * 8) & 31;
+		checksum += read8(&save_data) << shift;
+		length--;
+	}
+	return checksum;
+}
+
+
+static void encodeSaveData(uint8_t* encoded_dst, const uint8_t* decoded_src) {
+	// Write signature
+	put32(&encoded_dst[0], SAVE_FILE_SIGNATURE);
 	
+	// Generate checksum of unencoded data and derive key
+	uint32_t checksum = generateChecksum(&decoded_src[0], SAVE_DECODED_SIZE);
+	uint16_t checksum_key = checksum ^ (checksum >> 8) ^ (checksum >> 16);
+	
+	// Encode and write data
+	encodeXor(&encoded_dst[8], &decoded_src[0], SAVE_DECODED_SIZE, checksum_key);
+	
+	// Write and encode checksum
+	uint8_t checksum_bytes[4];
+	put32(&checksum_bytes[0], checksum);
+	encodeXor(&encoded_dst[4], &checksum_bytes[0], 4, CHECKSUM_KEY);
+}
+
+
+static WDSaveStatus decodeSaveData(uint8_t* decoded_dst, uint8_t* encoded_src) {
+	// Check save file signature
+	if (get32(&encoded_src[0]) != SAVE_FILE_SIGNATURE) {
+		return SAVE_STATUS_SIGNATURE_MISMATCH;
+	}
+	
+	// Decode save file checksum and derive key
+	uint8_t checksum_bytes[4];
+	decodeXor(&checksum_bytes[0], &encoded_src[4], 4, CHECKSUM_KEY);
+	uint32_t stored_checksum = get32(&checksum_bytes[0]);
+	uint16_t checksum_key = stored_checksum ^ (stored_checksum >> 8) ^ (stored_checksum >> 16);
+	
+	// Decode rest of the save data
+	decodeXor(&decoded_dst[0], &encoded_src[8], SAVE_DECODED_SIZE, checksum_key);
+	
+	// Validate checksum
+	uint32_t calculated_checksum = generateChecksum(&decoded_dst[0], SAVE_DECODED_SIZE);
+	if (calculated_checksum == stored_checksum) {
+		return SAVE_STATUS_OK;
+	} else {
+		return SAVE_STATUS_CHECKSUM_MISMATCH;
+	}
+}
+
+
+
+// Functions for serializing or deserializing struct and bytes
+
+static void deserialize(WDSave* dst, const uint8_t* src_bytes) {
 	for (int i = 0; i < 10; i++) {
 		dst->unlockFlags[i] = read32(&src_bytes);
 	}
@@ -108,7 +196,7 @@ static void deserialize(WDSave* dst, const void* decoded_src) {
 	dst->travelModeRoom = read8(&src_bytes);
 	
 	dst->dogAge = read8(&src_bytes);
-	dst->dogMood = (s16)read16(&src_bytes);
+	dst->dogMood = (int16_t)read16(&src_bytes);
 	
 	for (int i = 0; i < 4; i++) {
 		dst->dogPersonality[i] = read8(&src_bytes);
@@ -156,9 +244,7 @@ static void deserialize(WDSave* dst, const void* decoded_src) {
 }
 
 
-static void serialize(void* decoded_dst, const WDSave* src) {
-	u8* dst_bytes = (u8*)decoded_dst;
-	
+static void serialize(uint8_t* dst_bytes, const WDSave* src) {
 	for (int i = 0; i < 10; i++) {
 		write32(&dst_bytes, src->unlockFlags[i]);
 	}
@@ -175,7 +261,7 @@ static void serialize(void* decoded_dst, const WDSave* src) {
 	write8(&dst_bytes, src->travelModeRoom);
 	
 	write8(&dst_bytes, src->dogAge);
-	write16(&dst_bytes, (u16)src->dogMood);
+	write16(&dst_bytes, (uint16_t)src->dogMood);
 	
 	for (int i = 0; i < 4; i++) {
 		write8(&dst_bytes, src->dogPersonality[i]);
@@ -224,58 +310,7 @@ static void serialize(void* decoded_dst, const WDSave* src) {
 
 
 
-static void encodeSaveData(void* encoded_dst, void* decoded_src) {
-	u16* dst_hwords = (u16*)encoded_dst;
-	u16* src_hwords = (u16*)decoded_src;
-	
-	// Write signature
-	dst_hwords[0] = SAVE_FILE_SIGNATURE & 0xFFFF;
-	dst_hwords[1] = SAVE_FILE_SIGNATURE >> 16;
-	
-	// Generate checksum of unencoded data and derive key
-	u32 checksum = generateChecksum(&src_hwords[0], SAVE_DECODED_SIZE);
-	u16 checksum_key = checksum ^ (checksum >> 8) ^ (checksum >> 16);
-	
-	// Encode and write data
-	encodeHwords(&dst_hwords[4], &src_hwords[0], SAVE_DECODED_SIZE, checksum_key);
-	
-	// Write and encode checksum
-	u16 checksum_hwords[2];
-	checksum_hwords[0] = checksum & 0xFFFF;
-	checksum_hwords[1] = checksum >> 16;
-	encodeHwords(&dst_hwords[2], &checksum_hwords[0], 4, CHECKSUM_KEY);
-}
-
-
-static WDSaveStatus decodeSaveData(void* decoded_dst, void* encoded_src) {
-	u16* dst_hwords = (u16*)decoded_dst;
-	u16* src_hwords = (u16*)encoded_src;
-	
-	// Check save file signature
-	u32 signature = (src_hwords[1] << 16) | src_hwords[0];
-	if (signature != SAVE_FILE_SIGNATURE) {
-		return SAVE_STATUS_SIGNATURE_MISMATCH;
-	}
-	
-	// Decode save file checksum and derive key
-	u16 checksum_hwords[2];
-	decodeHwords(&checksum_hwords[0], &src_hwords[2], 4, CHECKSUM_KEY);
-	u32 checksum = (checksum_hwords[1] << 16) | checksum_hwords[0];
-	u16 checksum_key = checksum ^ (checksum >> 8) ^ (checksum >> 16);
-	
-	// Decode rest of the save data
-	decodeHwords(&dst_hwords[0], &src_hwords[4], SAVE_DECODED_SIZE, checksum_key);
-	
-	// Validate checksum
-	u32 decoded_save_checksum = generateChecksum(&dst_hwords[0], SAVE_DECODED_SIZE);
-	if (checksum == decoded_save_checksum) {
-		return SAVE_STATUS_OK;
-	} else {
-		return SAVE_STATUS_CHECKSUM_MISMATCH;
-	}
-}
-
-
+// Save file importing or exporting to struct
 
 WDSaveStatus WD_ImportSaveFile(WDSave* dst, const char* savfile_src) {
 	FILE* sav_src = fopen(savfile_src, "rb");
@@ -283,13 +318,13 @@ WDSaveStatus WD_ImportSaveFile(WDSave* dst, const char* savfile_src) {
 		return SAVE_STATUS_FILE_FAILURE;
 	}
 	
-	u8 encoded_data_buf[SAVE_ENCODED_SIZE];
+	uint8_t encoded_data_buf[SAVE_ENCODED_SIZE];
 	if (fread(&encoded_data_buf[0], 1, SAVE_ENCODED_SIZE, sav_src) != SAVE_ENCODED_SIZE) {
 		fclose(sav_src);
 		return SAVE_STATUS_FILE_FAILURE;
 	}
 	
-	u8 decoded_data_buf[SAVE_DECODED_SIZE];
+	uint8_t decoded_data_buf[SAVE_DECODED_SIZE];
 	WDSaveStatus status = decodeSaveData(&decoded_data_buf[0], &encoded_data_buf[0]);
 	if (status != SAVE_STATUS_OK) {
 		// Try backup data instead
@@ -322,10 +357,10 @@ WDSaveStatus WD_ExportSaveFile(const char* savfile_dst, const WDSave* src) {
 		return SAVE_STATUS_FILE_FAILURE;
 	}
 	
-	u8 decoded_data_buf[SAVE_DECODED_SIZE];
+	uint8_t decoded_data_buf[SAVE_DECODED_SIZE];
 	serialize(&decoded_data_buf[0], src);
 	
-	u8 encoded_data_buf[SAVE_ENCODED_SIZE];
+	uint8_t encoded_data_buf[SAVE_ENCODED_SIZE];
 	encodeSaveData(&encoded_data_buf[0], &decoded_data_buf[0]);
 	
 	// Write data, padding, backup data, padding
@@ -335,7 +370,7 @@ WDSaveStatus WD_ExportSaveFile(const char* savfile_dst, const WDSave* src) {
 			return SAVE_STATUS_FILE_FAILURE;
 		}
 		
-		u8 fill_byte = 0xFF;
+		uint8_t fill_byte = 0xFF;
 		for (int offset = SAVE_ENCODED_SIZE; offset != SAVE_PADDED_SIZE; offset++) {
 			if (fwrite(&fill_byte, 1, 1, sav_dst) != 1) {
 				fclose(sav_dst);
@@ -351,13 +386,15 @@ WDSaveStatus WD_ExportSaveFile(const char* savfile_dst, const WDSave* src) {
 
 
 
+// Data file importing or exporting to struct
+
 WDSaveStatus WD_ImportDataFile(WDSave* dst, const char* binfile_src) {
 	FILE* bin_src = fopen(binfile_src, "rb");
 	if (bin_src == NULL) {
 		return SAVE_STATUS_FILE_FAILURE;
 	}
 	
-	u8 decoded_data_buf[SAVE_DECODED_SIZE];
+	uint8_t decoded_data_buf[SAVE_DECODED_SIZE];
 	if (fread(&decoded_data_buf[0], 1, SAVE_DECODED_SIZE, bin_src) != SAVE_DECODED_SIZE) {
 		fclose(bin_src);
 		return SAVE_STATUS_FILE_FAILURE;
@@ -377,7 +414,7 @@ WDSaveStatus WD_ExportDataFile(const char* binfile_dst, const WDSave* src) {
 		return SAVE_STATUS_FILE_FAILURE;
 	}
 	
-	u8 decoded_data_buf[SAVE_DECODED_SIZE];
+	uint8_t decoded_data_buf[SAVE_DECODED_SIZE];
 	serialize(&decoded_data_buf[0], src);
 	
 	if (fwrite(&decoded_data_buf[0], 1, SAVE_DECODED_SIZE, bin_dst) != SAVE_DECODED_SIZE) {

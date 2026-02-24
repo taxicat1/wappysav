@@ -69,5 +69,6 @@ int main(int argc, char* argv[]) {
 		}
 		
 		printf("OK\n");
+		return EXIT_SUCCESS;
 	}
 }
