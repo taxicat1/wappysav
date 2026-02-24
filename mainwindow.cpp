@@ -11,7 +11,6 @@
 
 extern "C"{
 #include "save_proc.c"
-#include "nitro_types.h" // Doesn't actually need to be included, but if more functions are added, it might be useful.
 #include "save_proc.h"
 }
 
@@ -65,34 +64,25 @@ void MainWindow::onBrowseDecrypt(){
 void MainWindow::Decrypt(){
     // Get name and location for output file
     QString output_fname = QFileDialog::getSaveFileName(this, tr("Save Decrypted File"), m_currentDir.absolutePath());
-    // Get actual file from filename stored earlier
-    QFile *decryptfile = new QFile(filename);
 
-    // Convert QFile to FILE
-    decryptfile->open(QIODevice::ReadOnly);
-    int fileHandle = decryptfile->handle();
-    FILE* inputdecrypt = fdopen(fileHandle, "rb");
-
+    WDSave save_data;
     // Import file with Mow's original C code in save_proc.c
-    WD_ImportSaveFile(encoded_data_buf, inputdecrypt);
-    decryptfile->close();
-    fclose(inputdecrypt);
+    int decode_result = WD_ImportSaveFile(&save_data, filename.toLocal8Bit());
 
-    int decode_result = WD_DecodeSaveData(decoded_data_buf, encoded_data_buf);
+
     switch (decode_result) { // Use result from WD_DecodeSaveData to display a message box
     case SAVE_STATUS_OK: {
         // Create file
         QByteArray outtemp = output_fname.toLocal8Bit();
-        char* finaloutput = outtemp.data();
-        FILE* decryptout = fopen(finaloutput, "wb");
-        if (decryptout == NULL) {
-            QMessageBox::critical(this,tr("WappySav Error"),tr("Could not write."));
+
+        if (WD_ExportDataFile(outtemp, &save_data) != SAVE_STATUS_OK){
+            QMessageBox::warning(this,tr("WappySav Error"),tr("Could not write %s\n", outtemp));
+            break;
         }
-        else {
+        else{
 
-        WD_ExportDataFile(decryptout, decoded_data_buf);
 
-        fclose(decryptout);
+
 
         QMessageBox::information(this,tr("WappySav"),tr("Conversion successful"));
         break;
@@ -120,34 +110,19 @@ void MainWindow::OnBrowseEncrypt(){
 void MainWindow::Encrypt(){
     // Get name and location of file for exporting
     QString output_fname = QFileDialog::getSaveFileName(this, tr("Save Encrypted File"), m_currentDir.absolutePath());
-    // Get an actual file from the path to the one selected earlier
-    QFile *encryptfile = new QFile(filenameopen);
-    // Convert QFile to FILE
-    encryptfile->open(QIODevice::ReadOnly);
-    int fileHandle2 = encryptfile->handle();
-    FILE* inencrypt = fdopen(fileHandle2, "rb");
 
+    WDSave save_data;
     // Run functions from Mow's C code.
-    WD_ImportDataFile(decoded_data_buf, inencrypt);
-    fclose(inencrypt);
-    encryptfile->close();
+    WD_ImportDataFile(&save_data, filenameopen.toLocal8Bit());
 
-    // Store result of save reading in result
-    int result = WD_EncodeSaveData(encoded_data_buf, decoded_data_buf);
 
-    // Create FILE from the QString stored earlier
-    QByteArray outtemp2 = output_fname.toLocal8Bit();
-    char* finaloutput2 = outtemp2.data();
-    FILE* output_file2 = fopen(finaloutput2, "wb");
 
-    // Show popup if file returns NULL
-    if (output_file2 == NULL) {
+    if (WD_ExportSaveFile(output_fname.toLocal8Bit(), &save_data) != SAVE_STATUS_OK) {
         QMessageBox::critical(this,tr("WappySav Error"),tr("Could not write file."));
+
     }
     // Export file and show infobox if save status is good
-    else if (result == SAVE_STATUS_OK){
-        WD_ExportSaveFile(output_file2, encoded_data_buf);
-        fclose(output_file2);
+    else{
         QMessageBox::information(this, tr("WappySav"), tr("Successfully encrypted file.") );
     }
 

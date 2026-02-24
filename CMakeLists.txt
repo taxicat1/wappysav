@@ -20,7 +20,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        nitro_types.h
         save_proc.c
         save_proc.h
 )
@@ -32,7 +31,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
-        mainwindow.h nitro_types.h save_proc.c save_proc.h
+        mainwindow.h save_proc.c save_proc.h
         ${app_icon_resource_windows}
 
 
