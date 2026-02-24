@@ -12,6 +12,7 @@
 #define SAVE_FILE_SIZE  (0x200)
 #define SAVE_ENCODED_SIZE  (0xC0)
 #define SAVE_DECODED_SIZE  (SAVE_ENCODED_SIZE - 0x8)
+#define SAVE_PADDED_SIZE  (0x100)
 
 
 static void decodeHwords(u16* dst, u16* src, u32 length, u16 key) {
@@ -282,17 +283,31 @@ WDSaveStatus WD_ImportSaveFile(WDSave* dst, const char* savfile_src) {
 		return SAVE_STATUS_FILE_FAILURE;
 	}
 	
-	// Ignore padding and backup copy
 	u8 encoded_data_buf[SAVE_ENCODED_SIZE];
 	if (fread(&encoded_data_buf[0], 1, SAVE_ENCODED_SIZE, sav_src) != SAVE_ENCODED_SIZE) {
 		fclose(sav_src);
 		return SAVE_STATUS_FILE_FAILURE;
 	}
 	
-	fclose(sav_src);
-	
 	u8 decoded_data_buf[SAVE_DECODED_SIZE];
 	WDSaveStatus status = decodeSaveData(&decoded_data_buf[0], &encoded_data_buf[0]);
+	if (status != SAVE_STATUS_OK) {
+		// Try backup data instead
+		if (fseek(sav_src, SAVE_PADDED_SIZE, SEEK_SET) != 0) {
+			fclose(sav_src);
+			return SAVE_STATUS_FILE_FAILURE;
+		}
+		
+		if (fread(&encoded_data_buf[0], 1, SAVE_ENCODED_SIZE, sav_src) != SAVE_ENCODED_SIZE) {
+			fclose(sav_src);
+			return SAVE_STATUS_FILE_FAILURE;
+		}
+		
+		status = decodeSaveData(&decoded_data_buf[0], &encoded_data_buf[0]);
+	}
+	
+	fclose(sav_src);
+	
 	if (status == SAVE_STATUS_OK) {
 		deserialize(dst, &decoded_data_buf[0]);
 	}
@@ -321,7 +336,7 @@ WDSaveStatus WD_ExportSaveFile(const char* savfile_dst, const WDSave* src) {
 		}
 		
 		u8 fill_byte = 0xFF;
-		for (int offset = SAVE_ENCODED_SIZE; offset != 0x100; offset++) {
+		for (int offset = SAVE_ENCODED_SIZE; offset != SAVE_PADDED_SIZE; offset++) {
 			if (fwrite(&fill_byte, 1, 1, sav_dst) != 1) {
 				fclose(sav_dst);
 				return SAVE_STATUS_FILE_FAILURE;
