@@ -50,7 +50,7 @@ void MainWindow::About(){
 }
 
 void MainWindow::AboutQt(){
-    QMessageBox::information(this,tr("About Qt"),tr("Made with Qt 6.10.1.\nAll rights to Qt belong to the Qt Company."));
+    QMessageBox::information(this,tr("About Qt"),tr("Made with Qt 6.10.2.\nAll rights to Qt belong to the Qt Company."));
 }
 
 
