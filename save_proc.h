@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+
 #define SAVE_FILE_SIZE  (0x200)
 #define SAVE_ENCODED_SIZE  (0xC0)
 #define SAVE_DECODED_SIZE  (SAVE_ENCODED_SIZE - 0x8)
