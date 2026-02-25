@@ -1,5 +1,5 @@
-#ifndef WD_DECL_H
-#define WD_DECL_H
+#ifndef WD_DEF_H
+#define WD_DEF_H
 
 typedef enum {
 	SAVE_STATUS_OK,
@@ -344,7 +344,7 @@ typedef enum {
 	FLAG_GAME_EASY_MAX = FLAG_HOME_GAME_EASY_MAX,
 	
 	// Unlocked normal difficulties for travel games
-	FLAG_GAME_NORMA_START = 248,
+	FLAG_GAME_NORMAL_START = 248,
 	
 	FLAG_TRAVEL_GAME_NORMAL_START = 248,
 	FLAG_TRAVEL_GAME_FRUIT_CATCH_NORMAL = 248,             // 248
