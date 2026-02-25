@@ -33,7 +33,7 @@ jobs:
     - name: make
       working-directory: ${{github.workspace}}
 
-      run: make Makefile
+      run: make
     - name: deploy
       working-directory: ${{github.workspace}}
       run: windeployqt.exe /build/Release
