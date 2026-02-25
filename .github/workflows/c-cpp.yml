@@ -1,0 +1,50 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: "6.10.2"
+        arch: "win64_mingw"
+        tools: 'tools_mingw1310'
+
+    - name: Path stuff
+      shell: bash
+      run: echo "${{ github.workspace }}\Qt\Tools\mingw1310_64\bin" >> $GITHUB_PATH
+
+    - name: qmake
+      working-directory: ${{github.workspace}}
+      run: qmake -makefile
+      
+    - name: make
+      working-directory: ${{github.workspace}}
+
+      run: make
+    - name: deploy
+      working-directory: ${{github.workspace}}/build/Release
+      run: windeployqt.exe ./
+
+    - name: upload
+      uses: actions/upload-artifact@v6.0.0
+      
+      with:
+        path: ${{github.workspace}}/build
+
+
+      
+
+      

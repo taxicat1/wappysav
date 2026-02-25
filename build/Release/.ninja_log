@@ -1,0 +1,21 @@
+# ninja log v6
+55	2077	7936764895088040	wappysav2_autogen/timestamp	4785414020680ca6
+55	2077	7936764895088040	wappysav2_autogen/mocs_compilation.cpp	4785414020680ca6
+55	2077	7936764895088040	C:/Users/Owner/wappysav/wappysav2/build/Release/wappysav2_autogen/timestamp	4785414020680ca6
+40	1993	7936759416637291	C:/Users/Owner/wappysav/wappysav2/build/Release/cmake_install.cmake	94d6e4a64e2d2e35
+23	69	7936764430082433	CMakeFiles/clean.additional	639c58e388065fbd
+2080	10791	7936764897801680	CMakeFiles/wappysav2.dir/wappysav2_autogen/mocs_compilation.cpp.obj	2f4e77391762c748
+55	2077	7936764895088040	C:/Users/Owner/wappysav/wappysav2/build/Release/wappysav2_autogen/mocs_compilation.cpp	4785414020680ca6
+2090	10747	7936764897887310	CMakeFiles/wappysav2.dir/main.cpp.obj	a0dfd5a01de43dd2
+2109	2443	7936764898073263	CMakeFiles/wappysav2.dir/res.rc.obj	978cac9043c5badc
+2100	11816	7936764897987840	CMakeFiles/wappysav2.dir/mainwindow.cpp.obj	820aa37689e77f12
+11816	12985	7936764995154611	wappysav2.exe	7e0acc99a1cb5d87
+70	90	7936764430548082	clean	101d0f6048d5fe99
+40	1993	7936821526010270	build.ninja	94d6e4a64e2d2e35
+6	1892	7936821526010270	build.ninja	f0b8f27045fc4d89
+42	342	7936821528112971	wappysav2_autogen/timestamp	4785414020680ca6
+42	342	7936821528112971	wappysav2_autogen/mocs_compilation.cpp	4785414020680ca6
+42	342	7936821528112971	C:/Users/Owner/wappysav/wappysav2/build/Release/wappysav2_autogen/timestamp	4785414020680ca6
+42	342	7936821528112971	C:/Users/Owner/wappysav/wappysav2/build/Release/wappysav2_autogen/mocs_compilation.cpp	4785414020680ca6
+344	15942	7936821531128709	CMakeFiles/wappysav2.dir/mainwindow.cpp.obj	820aa37689e77f12
+15943	17342	7936821687122541	wappysav2.exe	7e0acc99a1cb5d87
