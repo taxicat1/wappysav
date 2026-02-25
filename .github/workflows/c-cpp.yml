@@ -21,15 +21,20 @@ jobs:
         version: "6.10.2"
 
     - name: qmake
-      run: qmake.exe -makefile ${{github.workspace}}
+      working-directory: ${{github.workspace}}
+      run: qmake
       
     - name: make
-      run: make ${{github.workspace}}
+      working-directory: ${{github.workspace}}/build
+
+      run: make
     - name: deploy
-      run: windeployqt.exe ${{github.workspace}}/build/Release
+      working-directory: ${{github.workspace}}
+      run: windeployqt.exe /build/Release
 
     - name: upload
       uses: actions/upload-artifact@v6.0.0
+      
       with:
         path: ${{github.workspace}}/build
 
