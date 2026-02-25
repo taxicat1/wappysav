@@ -197,6 +197,8 @@ typedef enum {
 	FLAG_UNUSED_MAX,
 	
 	// 'New!' flag for unlocked toys
+	FLAG_SEEN_ITEM_START = 135,
+	
 	FLAG_SEEN_TOY_START = 135,
 	FLAG_SEEN_TOY_BUBBLES = 135,                           // 135
 	FLAG_SEEN_TOY_BEACH_BALL,                              // 136
@@ -235,6 +237,8 @@ typedef enum {
 	FLAG_SEEN_FOOD_MINT_ICE_CREAM,                         // 165
 	FLAG_SEEN_FOOD_STRW_ICE_CREAM,                         // 166
 	FLAG_SEEN_FOOD_MAX,
+	
+	FLAG_SEEN_ITEM_MAX = FLAG_SEEN_FOOD_MAX,
 	
 	// 'New!' flag for unlocked commands
 	FLAG_SEEN_CMD_START = 167,
