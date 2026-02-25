@@ -21,6 +21,11 @@ jobs:
         version: "6.10.2"
         arch: "win64_mingw"
 
+
+    - name: Path stuff
+      shell: bash
+      run: echo "${{ github.workspace }}\Qt\Tools\mingw1310_64\bin" >> $GITHUB_PATH
+
     - name: qmake
       working-directory: ${{github.workspace}}
       run: qmake
