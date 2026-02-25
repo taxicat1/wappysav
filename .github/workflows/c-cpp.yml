@@ -36,7 +36,7 @@ jobs:
       run: make
     - name: deploy
       working-directory: ${{github.workspace}}/build/Release
-      run: windeployqt.exe
+      run: windeployqt.exe ./
 
     - name: upload
       uses: actions/upload-artifact@v6.0.0
