@@ -46,6 +46,8 @@ typedef enum {
 	FLAG_TRAVEL_GAME_MAX,
 	
 	// Unlocked toys
+	FLAG_ITEM_START = 17,
+	
 	FLAG_TOY_START = 17,
 	FLAG_TOY_BUBBLES = 17,                                 // 17
 	FLAG_TOY_BEACH_BALL,                                   // 18
@@ -84,6 +86,8 @@ typedef enum {
 	FLAG_FOOD_MINT_ICE_CREAM,                              // 47
 	FLAG_FOOD_STRW_ICE_CREAM,                              // 48
 	FLAG_FOOD_MAX,
+	
+	FLAG_ITEM_MAX = FLAG_FOOD_MAX,
 	
 	// Unlocked home mode commands
 	FLAG_CMD_START = 49,
