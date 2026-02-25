@@ -417,8 +417,6 @@ WDSaveStatus WD_ExportSaveFile(const char* savfile_dst, const WDSave* src) {
 
 
 
-
-
 // Data file importing or exporting to struct
 
 WDSaveStatus WD_ImportDataFile(WDSave* dst, const char* binfile_src) {

@@ -9,13 +9,13 @@
 
 
 typedef struct {
-	uint32_t    gameFlags[10];            // See enum
+	uint32_t    gameFlags[10];            // See WDGameFlag
 	uint16_t    nickname[11];             // 10 wchars + null terminator
 	uint8_t     musicVolume;              // 0-127
 	uint8_t     soundVolume;              // 0-127
-	uint8_t     travelModeColor;          // 0-5, blue/green/red/pink/purple/yellow
-	uint8_t     travelModeAccessory;      // TODO document enums
-	uint8_t     travelModeRoom;           // TODO document enums
+	uint8_t     travelModeColor;          // 0-5, see WDColor
+	uint8_t     travelModeAccessory;      // 0-17, see WDAccessory
+	uint8_t     travelModeRoom;           // 0-4, see WDRoom
 	uint8_t     dogAge;                   // 1-10
 	int16_t     dogMood;                  // -128-127
 	uint8_t     dogPersonality[4];        // scores: [0]=naughty, [1]=cheerful, [2]=big eater, [3]=neat freak
@@ -26,7 +26,7 @@ typedef struct {
 	uint16_t    dogCleanliness;           // 0-251, grooming increases
 	uint8_t     _unk52[2];                //<! not accessed?
 	uint32_t    playTime;                 // measured in frames, max 268435456
-	uint16_t    minigameScores[10][3];    // [game][difficulty], see enums
+	uint16_t    minigameScores[10][3];    // [game][difficulty], see WDMinigame / WDMinigameDifficulty
 	uint8_t     unk94;                    // possibly an array, purpose unknown
 	uint8_t     unk95;                    // *
 	uint8_t     unk96;                    // *
