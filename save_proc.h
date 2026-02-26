@@ -97,7 +97,7 @@ static inline WDPersonality WD_CurrentDogPersonality(WDSave* sav) {
 		}
 	}
 	
-	return high_idx;
+	return (WDPersonality)high_idx;
 }
 
 #ifdef __cplusplus
