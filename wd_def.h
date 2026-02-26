@@ -1,6 +1,10 @@
 #ifndef WD_DEF_H
 #define WD_DEF_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
 	SAVE_STATUS_OK,
 	SAVE_STATUS_SIGNATURE_MISMATCH,
@@ -1056,5 +1060,9 @@ static const char* WDMinigameDifficultyStr[] = {
 	"Normal",                                              // DIFFICULTY_NORMAL
 	"Hard"                                                 // DIFFICULTY_HARD
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

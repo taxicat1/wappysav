@@ -1,6 +1,10 @@
 #ifndef SAVE_PROC_H
 #define SAVE_PROC_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -95,5 +99,9 @@ static inline WDPersonality WD_CurrentDogPersonality(WDSave* sav) {
 	
 	return high_idx;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
