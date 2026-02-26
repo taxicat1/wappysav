@@ -998,52 +998,39 @@ static const char* WDPersonalityStr[] = {
 
 
 typedef enum {
-	MINIGAME_TYPE_START = 0,
-	MINIGAME_TYPE_TRAVEL = 0,                              // 0
-	MINIGAME_TYPE_HOME,                                    // 1
-	MINIGAME_TYPE_MAX
-} WDMinigameType;
-
-static const char* WDMinigameTypeStr[] = {
-	"Travel minigames",                                    // MINIGAME_TYPE_TRAVEL
-	"Home minigames"                                       // MINIGAME_TYPE_HOME
-};
-
-
-typedef enum {
 	MINIGAME_START = 0,
 	
-	MINIGAME_TRAVEL_START = 0,
-	MINIGAME_TRAVEL_FRUIT_CATCH = 0,                       // 0
-	MINIGAME_TRAVEL_WHICH_ONE_IS_WAPPY,                    // 1
-	MINIGAME_TRAVEL_WAPPYS_RACE,                           // 2
-	MINIGAME_TRAVEL_PIRATE_BATTLE,                         // 3
-	MINIGAME_TRAVEL_FIND_THE_FOOD,                         // 4
-	MINIGAME_TRAVEL_MAX,
-	
-	MINIGAME_HOME_START = 5,
-	MINIGAME_HOME_FRUIT_CATCH = 5,                         // 5
-	MINIGAME_HOME_GET_THE_CRITTERS,                        // 6
-	MINIGAME_HOME_PENGUIN_RUN,                             // 7
-	MINIGAME_HOME_TARGET_PRACTICE,                         // 8
-	MINIGAME_HOME_WHERES_THE_FOOD,                         // 9
+	MINIGAME_HOME_START = 0,
+	MINIGAME_HOME_FRUIT_CATCH = 0,                         // 0
+	MINIGAME_HOME_GET_THE_CRITTERS,                        // 1
+	MINIGAME_HOME_PENGUIN_RUN,                             // 2
+	MINIGAME_HOME_TARGET_PRACTICE,                         // 3
+	MINIGAME_HOME_WHERES_THE_FOOD,                         // 4
 	MINIGAME_HOME_MAX,
 	
-	MINIGAME_MAX = MINIGAME_HOME_MAX
+	MINIGAME_TRAVEL_START = 5,
+	MINIGAME_TRAVEL_FRUIT_CATCH = 5,                       // 5
+	MINIGAME_TRAVEL_WHICH_ONE_IS_WAPPY,                    // 6
+	MINIGAME_TRAVEL_WAPPYS_RACE,                           // 7
+	MINIGAME_TRAVEL_PIRATE_BATTLE,                         // 8
+	MINIGAME_TRAVEL_FIND_THE_FOOD,                         // 9
+	MINIGAME_TRAVEL_MAX,
+	
+	MINIGAME_MAX = MINIGAME_TRAVEL_MAX
 } WDMinigame;
 
 static const char* WDMinigameStr[] = {
-	"Fruit Catch",                                         // MINIGAME_TRAVEL_FRUIT_CATCH
-	"Which one is Wappy?",                                 // MINIGAME_TRAVEL_WHICH_ONE_IS_WAPPY
-	"Wappy's Race",                                        // MINIGAME_TRAVEL_WAPPYS_RACE
-	"Wappy's Pirate Battle",                               // MINIGAME_TRAVEL_PIRATE_BATTLE
-	"Find the Food!",                                      // MINIGAME_TRAVEL_FIND_THE_FOOD
-	
 	"Fruit Catch",                                         // MINIGAME_HOME_FRUIT_CATCH
 	"Get the Critters!",                                   // MINIGAME_HOME_GET_THE_CRITTERS
 	"Penguin Run",                                         // MINIGAME_HOME_PENGUIN_RUN
 	"Target Practice",                                     // MINIGAME_HOME_TARGET_PRACTICE
-	"Where's the Food?"                                    // MINIGAME_HOME_WHERES_THE_FOOD
+	"Where's the Food?",                                   // MINIGAME_HOME_WHERES_THE_FOOD
+	
+	"Fruit Catch",                                         // MINIGAME_TRAVEL_FRUIT_CATCH
+	"Which one is Wappy?",                                 // MINIGAME_TRAVEL_WHICH_ONE_IS_WAPPY
+	"Wappy's Race",                                        // MINIGAME_TRAVEL_WAPPYS_RACE
+	"Wappy's Pirate Battle",                               // MINIGAME_TRAVEL_PIRATE_BATTLE
+	"Find the Food!"                                       // MINIGAME_TRAVEL_FIND_THE_FOOD
 };
 
 
