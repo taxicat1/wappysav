@@ -78,9 +78,9 @@ static inline void WD_SetFlag(WDSave* sav, WDGameFlag flag, bool set) {
 // If the flag does not have a seen flag, FLAG_MAX is returned
 static inline WDGameFlag WD_SeenFlagFor(WDGameFlag unlock) {
 	if (unlock >= FLAG_TOY_START && unlock < FLAG_TRICK_MAX) {
-		return unlock + (FLAG_SEEN_TOY_START - FLAG_TOY_START);
+		return (WDGameFlag)(unlock + (FLAG_SEEN_TOY_START - FLAG_TOY_START));
 	} else if (unlock >= FLAG_TRAVEL_GAME_EASY_START && unlock < FLAG_HOME_GAME_HARD_MAX) {
-		return unlock + (FLAG_SEEN_TRAVEL_GAME_EASY_START - FLAG_TRAVEL_GAME_EASY_START);
+		return (WDGameFlag)(unlock + (FLAG_SEEN_TRAVEL_GAME_EASY_START - FLAG_TRAVEL_GAME_EASY_START));
 	} else {
 		return FLAG_MAX;
 	}
