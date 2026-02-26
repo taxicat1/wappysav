@@ -10,6 +10,10 @@
 #include <QDir>
 #include <QSettings>
 
+extern "C" {
+#include "save_proc.h"
+}
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -22,8 +26,9 @@ class MainWindow : public QMainWindow
 
 public:
 
-    QString filename;
-    QString filenameopen;
+    QString encryptSelectedFile;
+    QString decryptSelectedFile;
+    WDSave loadedData;
     QDir m_currentDir;
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
