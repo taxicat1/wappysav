@@ -203,8 +203,7 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 	}
 	
 	dst->friendship = read16(&src_bytes);
-	
-	dst->unk4C = read8(&src_bytes);
+	dst->fieldshipLevel = read8(&src_bytes);
 	
 	dst->_unk4D = read8(&src_bytes); // Unknown byte
 	
@@ -266,8 +265,7 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	}
 	
 	write16(&dst_bytes, src->friendship);
-	
-	write8(&dst_bytes, src->unk4C);
+	write8(&dst_bytes, src->fieldshipLevel);
 	
 	write8(&dst_bytes, src->_unk4D); // Unknown byte
 	

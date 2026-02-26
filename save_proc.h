@@ -24,16 +24,16 @@ typedef struct {
 	int16_t     mood;                                            // -128-127
 	uint8_t     personality[PERSONALITY_MAX];                    // Scores for each personality type, see WDPersonality
 	uint16_t    friendship;                                      // 0-54999
-	uint8_t     unk4C;                                           // (compared to a random number every few seconds)
+	uint8_t     fieldshipLevel;                                  // 0-10, updated between screens, equal to friendship / 5000
 	uint8_t     _unk4D;                                          // Not accessed? Padding?
 	uint16_t    hunger;                                          // 0=hungry, drains over time, foods increases
 	uint16_t    cleanliness;                                     // 0-251?, drains over time, grooming increases
 	uint8_t     _unk52[2];                                       // Not accessed? Padding?
 	uint32_t    playTime;                                        // Measured in frames @ 30 fps, max 268435456 (0x10000000)
 	uint16_t    minigameScores[MINIGAME_MAX][DIFFICULTY_MAX];    // [game][difficulty], see WDMinigame / WDMinigameDifficulty
-	uint8_t     unk94;                                           // (debug ほんやく = "translation")
-	uint8_t     minigameWinCount;                                // Number of times the player has won a minigame
-	uint8_t     unk96;                                           // (debug おていれ = "cleaning", however, it is not times player has cleaned Wappy)
+	uint8_t     unk94;                                           // (debug ほんやく = "translation", seems to be a counter)
+	uint8_t     minigameWinCount;                                // Number of times the player has won any minigame
+	uint8_t     unk96;                                           // (debug おていれ = "cleaning", it is not times player has cleaned Wappy. 0-10)
 	uint8_t     fedCount;                                        // Number of times the player has fed Wappy with any food
 	uint8_t     minigamePlayCount;                               // Number of times the player has played any minigame
 	uint8_t     petCount;                                        // Number of times the player has pet Wappy
