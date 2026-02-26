@@ -195,21 +195,21 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 	dst->travelModeAccessory = read8(&src_bytes);
 	dst->travelModeRoom = read8(&src_bytes);
 	
-	dst->dogAge = read8(&src_bytes);
-	dst->dogMood = (int16_t)read16(&src_bytes);
+	dst->age = read8(&src_bytes);
+	dst->mood = (int16_t)read16(&src_bytes);
 	
 	for (int i = PERSONALITY_START; i < PERSONALITY_MAX; i++) {
-		dst->dogPersonality[i] = read8(&src_bytes);
+		dst->personality[i] = read8(&src_bytes);
 	}
 	
-	dst->dogFriendship = read16(&src_bytes);
+	dst->friendship = read16(&src_bytes);
 	
 	dst->unk4C = read8(&src_bytes);
 	
 	dst->_unk4D = read8(&src_bytes); // Unknown byte
 	
-	dst->dogHunger = read16(&src_bytes);
-	dst->dogCleanliness = read16(&src_bytes);
+	dst->hunger = read16(&src_bytes);
+	dst->cleanliness = read16(&src_bytes);
 	
 	for (int i = 0; i < 2; i++) {
 		dst->_unk52[i] = read8(&src_bytes); // Unknown 2 bytes
@@ -229,7 +229,7 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 	dst->fedCount = read8(&src_bytes);
 	dst->minigamePlayCount = read8(&src_bytes);
 	dst->petCount = read8(&src_bytes);
-	dst->messageCount = read8(&src_bytes);
+	dst->messageSentCount = read8(&src_bytes);
 	dst->playCount = read8(&src_bytes);
 	
 	for (int i = 0; i < TRICK_MAX; i++) {
@@ -258,21 +258,21 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	write8(&dst_bytes, src->travelModeAccessory);
 	write8(&dst_bytes, src->travelModeRoom);
 	
-	write8(&dst_bytes, src->dogAge);
-	write16(&dst_bytes, (uint16_t)src->dogMood);
+	write8(&dst_bytes, src->age);
+	write16(&dst_bytes, (uint16_t)src->mood);
 	
 	for (int p = PERSONALITY_START; p < PERSONALITY_MAX; p++) {
-		write8(&dst_bytes, src->dogPersonality[p]);
+		write8(&dst_bytes, src->personality[p]);
 	}
 	
-	write16(&dst_bytes, src->dogFriendship);
+	write16(&dst_bytes, src->friendship);
 	
 	write8(&dst_bytes, src->unk4C);
 	
 	write8(&dst_bytes, src->_unk4D); // Unknown byte
 	
-	write16(&dst_bytes, src->dogHunger);
-	write16(&dst_bytes, src->dogCleanliness);
+	write16(&dst_bytes, src->hunger);
+	write16(&dst_bytes, src->cleanliness);
 	
 	for (int i = 0; i < 2; i++) {
 		write8(&dst_bytes, src->_unk52[i]); // Unknown 2 bytes
@@ -292,7 +292,7 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	write8(&dst_bytes, src->fedCount);
 	write8(&dst_bytes, src->minigamePlayCount);
 	write8(&dst_bytes, src->petCount);
-	write8(&dst_bytes, src->messageCount);
+	write8(&dst_bytes, src->messageSentCount);
 	write8(&dst_bytes, src->playCount);
 	
 	for (int i = 0; i < TRICK_MAX; i++) {

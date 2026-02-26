@@ -20,16 +20,16 @@ typedef struct {
 	uint8_t     travelModeColor;                                 // Enum 0-5, see WDColor
 	uint8_t     travelModeAccessory;                             // Enum 0-17, see WDAccessory
 	uint8_t     travelModeRoom;                                  // Enum 0-4, see WDRoom
-	uint8_t     dogAge;                                          // 1-10 (years)
-	int16_t     dogMood;                                         // -128-127
-	uint8_t     dogPersonality[PERSONALITY_MAX];                 // Scores for each personality type, see WDPersonality
-	uint16_t    dogFriendship;                                   // 0-54999
+	uint8_t     age;                                             // 1-10 (years)
+	int16_t     mood;                                            // -128-127
+	uint8_t     personality[PERSONALITY_MAX];                    // Scores for each personality type, see WDPersonality
+	uint16_t    friendship;                                      // 0-54999
 	uint8_t     unk4C;                                           // (compared to a random number every few seconds)
-	uint8_t     _unk4D;                                          //<! not accessed? Padding?
-	uint16_t    dogHunger;                                       // 0=hungry, drains over time, foods increases
-	uint16_t    dogCleanliness;                                  // 0-251?, drains over time, grooming increases
-	uint8_t     _unk52[2];                                       //<! not accessed? Padding?
-	uint32_t    playTime;                                        // measured in frames @ 30 fps, max 268435456 (0x10000000)
+	uint8_t     _unk4D;                                          // Not accessed? Padding?
+	uint16_t    hunger;                                          // 0=hungry, drains over time, foods increases
+	uint16_t    cleanliness;                                     // 0-251?, drains over time, grooming increases
+	uint8_t     _unk52[2];                                       // Not accessed? Padding?
+	uint32_t    playTime;                                        // Measured in frames @ 30 fps, max 268435456 (0x10000000)
 	uint16_t    minigameScores[MINIGAME_MAX][DIFFICULTY_MAX];    // [game][difficulty], see WDMinigame / WDMinigameDifficulty
 	uint8_t     unk94;                                           // (debug ほんやく = "translation")
 	uint8_t     minigameWinCount;                                // Number of times the player has won a minigame
@@ -37,10 +37,10 @@ typedef struct {
 	uint8_t     fedCount;                                        // Number of times the player has fed Wappy with any food
 	uint8_t     minigamePlayCount;                               // Number of times the player has played any minigame
 	uint8_t     petCount;                                        // Number of times the player has pet Wappy
-	uint8_t     messageCount;                                    // Number of times the player has sent any message to Wappy in home mode
+	uint8_t     messageSentCount;                                // Number of times the player has sent any message to Wappy in home mode
 	uint8_t     playCount;                                       // Number of times the player has played with Wappy with any toy
 	uint8_t     trickCount[TRICK_MAX];                           // Number of times Wappy has randomly performed each trick, see WDTrick
-	uint8_t     _unkB2[6];                                       //<! not accessed? Padding?
+	uint8_t     _unkB2[6];                                       // Not accessed? Padding?
 } WDSave;
 
 // Set up a save file as a newly created one
@@ -86,12 +86,12 @@ static inline WDGameFlag WD_SeenFlagFor(WDGameFlag unlock) {
 }
 
 // Get the current personality of the dog based on the personality scores
-static inline WDPersonality WD_CurrentDogPersonality(WDSave* sav) {
+static inline WDPersonality WD_CurrentPersonality(WDSave* sav) {
 	int high_val = -1;
 	int high_idx = 0;
 	for (int i = PERSONALITY_START; i < PERSONALITY_MAX; i++) {
-		if (sav->dogPersonality[i] > high_val) {
-			high_val = sav->dogPersonality[i];
+		if (sav->personality[i] > high_val) {
+			high_val = sav->personality[i];
 			high_idx = i;
 		}
 	}
