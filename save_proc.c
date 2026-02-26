@@ -180,11 +180,11 @@ static WDSaveStatus decodeSaveData(uint8_t* decoded_dst, uint8_t* encoded_src) {
 // Functions for serializing or deserializing struct and bytes
 
 static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < FLAG_NUM_U32S; i++) {
 		dst->gameFlags[i] = read32(&src_bytes);
 	}
 	
-	for (int i = 0; i < 11; i++) {
+	for (int i = 0; i < NICKNAME_BUF_LEN; i++) {
 		dst->nickname[i] = read16(&src_bytes);
 	}
 	
@@ -224,20 +224,16 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 	}
 	
 	dst->unk94 = read8(&src_bytes);
-	dst->unk95 = read8(&src_bytes);
+	dst->minigameWinCount = read8(&src_bytes);
 	dst->unk96 = read8(&src_bytes);
-	dst->unk97 = read8(&src_bytes);
-	dst->unk98 = read8(&src_bytes);
-	dst->unk99 = read8(&src_bytes);
-	dst->unk9A = read8(&src_bytes);
-	dst->unk9B = read8(&src_bytes);
+	dst->fedCount = read8(&src_bytes);
+	dst->minigamePlayCount = read8(&src_bytes);
+	dst->petCount = read8(&src_bytes);
+	dst->messageCount = read8(&src_bytes);
+	dst->playCount = read8(&src_bytes);
 	
-	for (int i = 0; i < 2; i++) {
-		dst->_unk9C[i] = read8(&src_bytes); // Unknown 2 bytes
-	}
-	
-	for (int i = 0; i < 21; i++) {
-		dst->unk9E[i] = read8(&src_bytes);
+	for (int i = 0; i < TRICK_MAX; i++) {
+		dst->trickCount[i] = read8(&src_bytes);
 	}
 	
 	for (int i = 0; i < 6; i++) {
@@ -247,11 +243,11 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 
 
 static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < FLAG_NUM_U32S; i++) {
 		write32(&dst_bytes, src->gameFlags[i]);
 	}
 	
-	for (int i = 0; i < 11; i++) {
+	for (int i = 0; i < NICKNAME_BUF_LEN; i++) {
 		write16(&dst_bytes, src->nickname[i]);
 	}
 	
@@ -291,20 +287,16 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	}
 	
 	write8(&dst_bytes, src->unk94);
-	write8(&dst_bytes, src->unk95);
+	write8(&dst_bytes, src->minigameWinCount);
 	write8(&dst_bytes, src->unk96);
-	write8(&dst_bytes, src->unk97);
-	write8(&dst_bytes, src->unk98);
-	write8(&dst_bytes, src->unk99);
-	write8(&dst_bytes, src->unk9A);
-	write8(&dst_bytes, src->unk9B);
+	write8(&dst_bytes, src->fedCount);
+	write8(&dst_bytes, src->minigamePlayCount);
+	write8(&dst_bytes, src->petCount);
+	write8(&dst_bytes, src->messageCount);
+	write8(&dst_bytes, src->playCount);
 	
-	for (int i = 0; i < 2; i++) {
-		write8(&dst_bytes, src->_unk9C[i]); // Unknown 2 bytes
-	}
-	
-	for (int i = 0; i < 21; i++) {
-		write8(&dst_bytes, src->unk9E[i]);
+	for (int i = 0; i < TRICK_MAX; i++) {
+		write8(&dst_bytes, src->trickCount[i]);
 	}
 	
 	for (int i = 0; i < 6; i++) {

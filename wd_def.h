@@ -12,6 +12,7 @@ typedef enum {
 	SAVE_STATUS_FILE_FAILURE
 } WDSaveStatus;
 
+#define NICKNAME_BUF_LEN (11)
 
 typedef enum {
 	FLAG_START = 0,
@@ -503,6 +504,8 @@ typedef enum {
 	
 	FLAG_MAX = FLAG_FOOTER_MAX
 } WDGameFlag;
+
+#define FLAG_NUM_U32S  ((FLAG_MAX + 31) / 32)
 
 static const char* WDGameFlagStr[] = {
 	// General
@@ -1046,6 +1049,59 @@ static const char* WDMinigameDifficultyStr[] = {
 	"Easy",                                                // DIFFICULTY_EASY
 	"Normal",                                              // DIFFICULTY_NORMAL
 	"Hard"                                                 // DIFFICULTY_HARD
+};
+
+
+typedef enum {
+	TRICK_START = 0,
+	TRICK_SHAKE = 0,                                       // 0
+	TRICK_STRETCH,                                         // 1
+	TRICK_GROOMING,                                        // 2
+	TRICK_STAND,                                           // 3
+	TRICK_HANDSTAND,                                       // 4
+	TRICK_BACKFLIP,                                        // 5
+	TRICK_HAPPY_DANCE,                                     // 6
+	TRICK_SHOW_OFF,                                        // 7
+	TRICK_FRONT_FLIP,                                      // 8
+	TRICK_DOUBLE_FRONT_FLIP,                               // 9
+	TRICK_TRIPLE_FRONT_FLIP,                               // 10
+	TRICK_ROLL_OVER,                                       // 11
+	TRICK_SNOW_ANGEL,                                      // 12
+	TRICK_CLAP,                                            // 13
+	TRICK_MONKEY_DANCE,                                    // 14
+	TRICK_JUMP_AND_FLIP,                                   // 15
+	TRICK_BODY_SHAKE,                                      // 16
+	TRICK_HULA,                                            // 17
+	TRICK_DIZZY,                                           // 18
+	TRICK_STAND_ON_ONE_LEG,                                // 19
+	TRICK_SUPER_HANDSTAND,                                 // 20
+	TRICK_BREAKDANCE,                                      // 21
+	TRICK_MAX
+} WDTrick;
+
+static const char* WDTrickStr[] = {
+	"Shake",                                               // TRICK_SHAKE
+	"Stretch",                                             // TRICK_STRETCH
+	"Grooming",                                            // TRICK_GROOMING
+	"Stand",                                               // TRICK_STAND
+	"Handstand",                                           // TRICK_HANDSTAND
+	"Backflip",                                            // TRICK_BACKFLIP
+	"Happy Dance",                                         // TRICK_HAPPY_DANCE
+	"Show Off",                                            // TRICK_SHOW_OFF
+	"Front Flip",                                          // TRICK_FRONT_FLIP
+	"Double Front Flip",                                   // TRICK_DOUBLE_FRONT_FLIP
+	"Triple Front Flip",                                   // TRICK_TRIPLE_FRONT_FLIP
+	"Roll Over",                                           // TRICK_ROLL_OVER
+	"Snow Angel",                                          // TRICK_SNOW_ANGEL
+	"Clap",                                                // TRICK_CLAP
+	"Monkey Dance",                                        // TRICK_MONKEY_DANCE
+	"Jump and Flip",                                       // TRICK_JUMP_AND_FLIP
+	"Body Shake",                                          // TRICK_BODY_SHAKE
+	"Hula",                                                // TRICK_HULA
+	"Dizzy",                                               // TRICK_DIZZY
+	"Stand on One Leg",                                    // TRICK_STAND_ON_ONE_LEG
+	"Super Handstand!",                                    // TRICK_SUPER_HANDSTAND
+	"Breakdance!"                                          // TRICK_BREAKDANCE
 };
 
 #ifdef __cplusplus

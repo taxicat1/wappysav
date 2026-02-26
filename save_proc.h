@@ -13,35 +13,34 @@ extern "C" {
 
 
 typedef struct {
-	uint32_t    gameFlags[10];            // See WDGameFlag
-	uint16_t    nickname[11];             // 10 wchars + null terminator
-	uint8_t     musicVolume;              // 0-127
-	uint8_t     soundVolume;              // 0-127
-	uint8_t     travelModeColor;          // 0-5, see WDColor
-	uint8_t     travelModeAccessory;      // 0-17, see WDAccessory
-	uint8_t     travelModeRoom;           // 0-4, see WDRoom
-	uint8_t     dogAge;                   // 1-10
-	int16_t     dogMood;                  // -128-127
-	uint8_t     dogPersonality[4];        // scores: [0]=naughty, [1]=cheerful, [2]=big eater, [3]=neat freak
-	uint16_t    dogFriendship;            // 0-54999
-	uint8_t     unk4C;                    // (compared to a random number every few seconds)
-	uint8_t     _unk4D;                   //<! not accessed?
-	uint16_t    dogHunger;                // 0=hungry, drains over time, foods add to it
-	uint16_t    dogCleanliness;           // 0-251, grooming increases
-	uint8_t     _unk52[2];                //<! not accessed?
-	uint32_t    playTime;                 // measured in frames, max 268435456
-	uint16_t    minigameScores[10][3];    // [game][difficulty], see WDMinigame / WDMinigameDifficulty
-	uint8_t     unk94;                    // possibly an array, purpose unknown
-	uint8_t     unk95;                    // *
-	uint8_t     unk96;                    // *
-	uint8_t     unk97;                    // *
-	uint8_t     unk98;                    // *
-	uint8_t     unk99;                    // *
-	uint8_t     unk9A;                    // *
-	uint8_t     unk9B;                    // *
-	uint8_t     _unk9C[2];                //<! not accessed?
-	uint8_t     unk9E[21];                // array accessed, purpose unknown
-	uint8_t     _unkB2[6];                //<! not accessed?
+	uint32_t    gameFlags[FLAG_NUM_U32S];                        // See WDGameFlag, WD_GetFlag, WD_SetFlag
+	uint16_t    nickname[NICKNAME_BUF_LEN];                      // 10 wchars + null terminator
+	uint8_t     musicVolume;                                     // 0-127
+	uint8_t     soundVolume;                                     // 0-127
+	uint8_t     travelModeColor;                                 // Enum 0-5, see WDColor
+	uint8_t     travelModeAccessory;                             // Enum 0-17, see WDAccessory
+	uint8_t     travelModeRoom;                                  // Enum 0-4, see WDRoom
+	uint8_t     dogAge;                                          // 1-10 (years)
+	int16_t     dogMood;                                         // -128-127
+	uint8_t     dogPersonality[PERSONALITY_MAX];                 // Scores for each personality type, see WDPersonality
+	uint16_t    dogFriendship;                                   // 0-54999
+	uint8_t     unk4C;                                           // (compared to a random number every few seconds)
+	uint8_t     _unk4D;                                          //<! not accessed? Padding?
+	uint16_t    dogHunger;                                       // 0=hungry, drains over time, foods increases
+	uint16_t    dogCleanliness;                                  // 0-251?, drains over time, grooming increases
+	uint8_t     _unk52[2];                                       //<! not accessed? Padding?
+	uint32_t    playTime;                                        // measured in frames @ 30 fps, max 268435456 (0x10000000)
+	uint16_t    minigameScores[MINIGAME_MAX][DIFFICULTY_MAX];    // [game][difficulty], see WDMinigame / WDMinigameDifficulty
+	uint8_t     unk94;                                           // (debug ほんやく = "translation")
+	uint8_t     minigameWinCount;                                // Number of times the player has won a minigame
+	uint8_t     unk96;                                           // (debug おていれ = "cleaning", however, it is not times player has cleaned Wappy)
+	uint8_t     fedCount;                                        // Number of times the player has fed Wappy with any food
+	uint8_t     minigamePlayCount;                               // Number of times the player has played any minigame
+	uint8_t     petCount;                                        // Number of times the player has pet Wappy
+	uint8_t     messageCount;                                    // Number of times the player has sent any message to Wappy in home mode
+	uint8_t     playCount;                                       // Number of times the player has played with Wappy with any toy
+	uint8_t     trickCount[TRICK_MAX];                           // Number of times Wappy has randomly performed each trick, see WDTrick
+	uint8_t     _unkB2[6];                                       //<! not accessed? Padding?
 } WDSave;
 
 // Set up a save file as a newly created one
@@ -98,6 +97,17 @@ static inline WDPersonality WD_CurrentDogPersonality(WDSave* sav) {
 	}
 	
 	return (WDPersonality)high_idx;
+}
+
+// Convert the current play time into hours/minutes/seconds
+static inline void WD_CalcPlayTime(WDSave* sav, int* out_hours, int* out_minutes, int* out_seconds) {
+	int seconds = sav->playTime / 30;
+	int minutes = seconds / 60;
+	int hours = minutes / 60;
+	
+	*out_hours = hours;
+	*out_minutes = minutes % 60;
+	*out_seconds = seconds % 60;
 }
 
 #ifdef __cplusplus
