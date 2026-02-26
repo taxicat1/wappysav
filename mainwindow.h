@@ -10,9 +10,8 @@
 #include <QDir>
 #include <QSettings>
 
-extern "C" {
 #include "save_proc.h"
-}
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

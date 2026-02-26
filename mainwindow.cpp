@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->EncryptButton, &QPushButton::clicked, this, &MainWindow::Encrypt);
     connect(ui->actionAbout_Qt, &QAction::triggered, this, &MainWindow::AboutQt);
     connect(ui->actionInfo,&QAction::triggered,this,&MainWindow::About);
+
+    WD_CreateNewSave(&loadedData);
 }
 
 
