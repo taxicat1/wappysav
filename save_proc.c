@@ -179,9 +179,9 @@ static WDSaveStatus decodeSaveData(uint8_t* decoded_dst, uint8_t* encoded_src) {
 
 // Functions for serializing or deserializing struct and bytes
 
-static void deserialize(WDSave* dst, const uint8_t* src_bytes) {
+static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 	for (int i = 0; i < 10; i++) {
-		dst->unlockFlags[i] = read32(&src_bytes);
+		dst->gameFlags[i] = read32(&src_bytes);
 	}
 	
 	for (int i = 0; i < 11; i++) {
@@ -198,7 +198,7 @@ static void deserialize(WDSave* dst, const uint8_t* src_bytes) {
 	dst->dogAge = read8(&src_bytes);
 	dst->dogMood = (int16_t)read16(&src_bytes);
 	
-	for (int i = 0; i < 4; i++) {
+	for (int i = PERSONALITY_START; i < PERSONALITY_MAX; i++) {
 		dst->dogPersonality[i] = read8(&src_bytes);
 	}
 	
@@ -217,8 +217,10 @@ static void deserialize(WDSave* dst, const uint8_t* src_bytes) {
 	
 	dst->playTime = read32(&src_bytes);
 	
-	for (int i = 0; i < 30; i++) {
-		dst->minigameScores[i] = read16(&src_bytes);
+	for (int g = MINIGAME_START; g < MINIGAME_MAX; g++) {
+		for (int d = DIFFICULTY_START; d < DIFFICULTY_MAX; d++) {
+			dst->minigameScores[g][d] = read16(&src_bytes);
+		}
 	}
 	
 	dst->unk94 = read8(&src_bytes);
@@ -244,9 +246,9 @@ static void deserialize(WDSave* dst, const uint8_t* src_bytes) {
 }
 
 
-static void serialize(uint8_t* dst_bytes, const WDSave* src) {
+static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	for (int i = 0; i < 10; i++) {
-		write32(&dst_bytes, src->unlockFlags[i]);
+		write32(&dst_bytes, src->gameFlags[i]);
 	}
 	
 	for (int i = 0; i < 11; i++) {
@@ -263,8 +265,8 @@ static void serialize(uint8_t* dst_bytes, const WDSave* src) {
 	write8(&dst_bytes, src->dogAge);
 	write16(&dst_bytes, (uint16_t)src->dogMood);
 	
-	for (int i = 0; i < 4; i++) {
-		write8(&dst_bytes, src->dogPersonality[i]);
+	for (int p = PERSONALITY_START; p < PERSONALITY_MAX; p++) {
+		write8(&dst_bytes, src->dogPersonality[p]);
 	}
 	
 	write16(&dst_bytes, src->dogFriendship);
@@ -282,8 +284,10 @@ static void serialize(uint8_t* dst_bytes, const WDSave* src) {
 	
 	write32(&dst_bytes, src->playTime);
 	
-	for (int i = 0; i < 30; i++) {
-		write16(&dst_bytes, src->minigameScores[i]);
+	for (int g = MINIGAME_START; g < MINIGAME_MAX; g++) {
+		for (int d = DIFFICULTY_START; d < DIFFICULTY_MAX; d++) {
+			write16(&dst_bytes, src->minigameScores[g][d]);
+		}
 	}
 	
 	write8(&dst_bytes, src->unk94);
@@ -306,6 +310,33 @@ static void serialize(uint8_t* dst_bytes, const WDSave* src) {
 	for (int i = 0; i < 6; i++) {
 		write8(&dst_bytes, src->_unkB2[i]); // Unknown 6 bytes
 	}
+}
+
+
+
+// New save file creation
+
+void WD_CreateNewSave(WDSave* dst) {
+	static const uint8_t new_save_file_data[] = {
+		0x84, 0x10, 0x06, 0x80, 0x24, 0x49, 0xFE, 0xEF, 0xF8, 0x07, 0x00, 0x00,
+		0x0C, 0x00, 0x00, 0x21, 0x84, 0x01, 0x20, 0x49, 0x92, 0xFF, 0x3B, 0xFE,
+		0x01, 0x00, 0x00, 0x03, 0x00, 0xC0, 0xFF, 0x00, 0x00, 0xF0, 0x3F, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x57, 0x00, 0x61, 0x00, 0x70, 0x00, 0x70, 0x00,
+		0x79, 0x00, 0x00, 0x00, 0x20, 0x00, 0x70, 0x00, 0x72, 0x00, 0x65, 0x00,
+		0x76, 0x00, 0x7F, 0x7F, 0x00, 0x00, 0x00, 0x01, 0xC0, 0xFF, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x57, 0x02,
+		0x57, 0x02, 0x57, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00
+	};
+	
+	deserializeSaveData(dst, &new_save_file_data[0]);
 }
 
 
@@ -344,7 +375,7 @@ WDSaveStatus WD_ImportSaveFile(WDSave* dst, const char* savfile_src) {
 	fclose(sav_src);
 	
 	if (status == SAVE_STATUS_OK) {
-		deserialize(dst, &decoded_data_buf[0]);
+		deserializeSaveData(dst, &decoded_data_buf[0]);
 	}
 	
 	return status;
@@ -358,7 +389,7 @@ WDSaveStatus WD_ExportSaveFile(const char* savfile_dst, const WDSave* src) {
 	}
 	
 	uint8_t decoded_data_buf[SAVE_DECODED_SIZE];
-	serialize(&decoded_data_buf[0], src);
+	serializeSaveData(&decoded_data_buf[0], src);
 	
 	uint8_t encoded_data_buf[SAVE_ENCODED_SIZE];
 	encodeSaveData(&encoded_data_buf[0], &decoded_data_buf[0]);
@@ -402,7 +433,7 @@ WDSaveStatus WD_ImportDataFile(WDSave* dst, const char* binfile_src) {
 	
 	fclose(bin_src);
 	
-	deserialize(dst, &decoded_data_buf[0]);
+	deserializeSaveData(dst, &decoded_data_buf[0]);
 	
 	return SAVE_STATUS_OK;
 }
@@ -415,7 +446,7 @@ WDSaveStatus WD_ExportDataFile(const char* binfile_dst, const WDSave* src) {
 	}
 	
 	uint8_t decoded_data_buf[SAVE_DECODED_SIZE];
-	serialize(&decoded_data_buf[0], src);
+	serializeSaveData(&decoded_data_buf[0], src);
 	
 	if (fwrite(&decoded_data_buf[0], 1, SAVE_DECODED_SIZE, bin_dst) != SAVE_DECODED_SIZE) {
 		fclose(bin_dst);
