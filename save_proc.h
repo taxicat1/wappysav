@@ -18,7 +18,7 @@ typedef struct {
 	uint8_t     musicVolume;                                     // 0-127
 	uint8_t     soundVolume;                                     // 0-127
 	uint8_t     travelModeColor;                                 // Enum 0-5, see WDColor
-	uint8_t     travelModeAccessory;                             // Enum 0-17, see WDAccessory
+	uint8_t     travelModeAccessory;                             // Enum 0-18, see WDAccessory
 	uint8_t     travelModeRoom;                                  // Enum 0-4, see WDRoom
 	uint8_t     age;                                             // 1-10 (years)
 	int16_t     mood;                                            // -128-127
