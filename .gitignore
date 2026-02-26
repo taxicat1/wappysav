@@ -3,6 +3,7 @@
 *.sav
 *.bin
 .qmake.stash
+.qtcreator/*
 /CMakeFiles
 build/*
 debug/*
