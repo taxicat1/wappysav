@@ -229,7 +229,7 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 	dst->minigamePlayCount    = read8(&src_bytes);
 	dst->petCount             = read8(&src_bytes);
 	dst->messageSentCount     = read8(&src_bytes);
-	dst->playCount            = read8(&src_bytes);
+	dst->toyPlayCount         = read8(&src_bytes);
 	
 	for (int i = 0; i < TRICK_MAX; i++) {
 		dst->trickCount[i] = read8(&src_bytes);
@@ -291,7 +291,7 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	write8(&dst_bytes, src->minigamePlayCount);
 	write8(&dst_bytes, src->petCount);
 	write8(&dst_bytes, src->messageSentCount);
-	write8(&dst_bytes, src->playCount);
+	write8(&dst_bytes, src->toyPlayCount);
 	
 	for (int i = 0; i < TRICK_MAX; i++) {
 		write8(&dst_bytes, src->trickCount[i]);
