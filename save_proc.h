@@ -13,7 +13,7 @@ extern "C" {
 
 
 typedef struct {
-	uint32_t    gameFlags[FLAG_NUM_U32S];                        // See WDGameFlag, WD_GetFlag, WD_SetFlag
+	uint32_t    gameFlags[FLAG_NUM_U32S];                        // See WDGameFlag, WD_GetFlag(), WD_SetFlag()
 	uint16_t    nickname[NICKNAME_BUF_LEN];                      // 10 wchars + null terminator
 	uint8_t     musicVolume;                                     // 0-127
 	uint8_t     soundVolume;                                     // 0-127
@@ -22,25 +22,25 @@ typedef struct {
 	uint8_t     travelModeRoom;                                  // Enum 0-4, see WDRoom
 	uint8_t     age;                                             // 1-10 (years)
 	int16_t     mood;                                            // -128-127
-	uint8_t     personality[PERSONALITY_MAX];                    // Scores for each personality type, see WDPersonality
+	uint8_t     personality[PERSONALITY_MAX];                    // Scores 0-255 for each personality type, see WDPersonality, WD_CurrentPersonality()
 	uint16_t    friendship;                                      // 0-54999
-	uint8_t     fieldshipLevel;                                  // 0-10, updated between screens, equal to friendship / 5000
-	uint8_t     _unk4D;                                          // Not accessed? Padding?
-	uint16_t    hunger;                                          // 0=hungry, drains over time, foods increases
-	uint16_t    cleanliness;                                     // 0-251?, drains over time, grooming increases
-	uint8_t     _unk52[2];                                       // Not accessed? Padding?
-	uint32_t    playTime;                                        // Measured in frames @ 30 fps, max 268435456 (0x10000000)
+	uint8_t     fieldshipLevel;                                  // 0-10, updated between screens, set equal to friendship / 5000
+	uint8_t     pad4D;                                           // Apparently structure padding (always 0x00)
+	uint16_t    fullness;                                        // 0-255, drains over time, feeding increases
+	uint16_t    cleanliness;                                     // 0-255, drains over time, grooming increases
+	uint8_t     pad52[2];                                        // Apparently structure padding (always 0x00s)
+	uint32_t    playTime;                                        // Measured in frames @ 30 fps, max 268435456 (0x10000000), see WD_CalcPlayTime
 	uint16_t    minigameScores[MINIGAME_MAX][DIFFICULTY_MAX];    // [game][difficulty], see WDMinigame / WDMinigameDifficulty
-	uint8_t     unk94;                                           // (debug ほんやく = "translation", seems to be a counter)
-	uint8_t     minigameWinCount;                                // Number of times the player has won any minigame
-	uint8_t     unk96;                                           // (debug おていれ = "cleaning", it is not times player has cleaned Wappy. 0-10)
-	uint8_t     fedCount;                                        // Number of times the player has fed Wappy with any food
-	uint8_t     minigamePlayCount;                               // Number of times the player has played any minigame
-	uint8_t     petCount;                                        // Number of times the player has pet Wappy
-	uint8_t     messageSentCount;                                // Number of times the player has sent any message to Wappy in home mode
-	uint8_t     playCount;                                       // Number of times the player has played with Wappy with any toy
-	uint8_t     trickCount[TRICK_MAX];                           // Number of times Wappy has randomly performed each trick, see WDTrick
-	uint8_t     _unkB2[6];                                       // Not accessed? Padding?
+	uint8_t     messageReceivedCount;                            // Number of times a message was received from the Wappy robot (max 255)
+	uint8_t     minigameWinCount;                                // Number of times the player has won any minigame (max 255)
+	uint8_t     fullyCleanedCount;                               // Number of times the player has fully cleaned Wappy (max 255)
+	uint8_t     fedCount;                                        // Number of times the player has fed Wappy with any food (max 255)
+	uint8_t     minigamePlayCount;                               // Number of times the player has played any minigame (max 255)
+	uint8_t     petCount;                                        // Number of times the player has pet Wappy (max 255)
+	uint8_t     messageSentCount;                                // Number of times the player has sent any message to Wappy in home mode (max 255)
+	uint8_t     playCount;                                       // Number of times the player has played with Wappy with any toy (max 255)
+	uint8_t     trickCount[TRICK_MAX];                           // Number of times Wappy has randomly performed each trick (max 255), see WDTrick
+	uint8_t     padB2[6];                                        // Apparently structure padding (always 0x00s)
 } WDSave;
 
 // Set up a save file as a newly created one
@@ -84,6 +84,20 @@ static inline WDGameFlag WD_SeenFlagFor(WDGameFlag unlock) {
 		return FLAG_MAX;
 	}
 }
+
+
+// Turn a seen flag for an unlock (eg FLAG_SEEN_TRICK_CLAP) into the flag for that unlock (FLAG_TRICK_CLAP)
+// If the flag is not a seen flag, FLAG_MAX is returned
+static inline WDGameFlag WD_UnlockFlagFor(WDGameFlag seen_flag) {
+	if (seen_flag >= FLAG_SEEN_TOY_START && seen_flag < FLAG_SEEN_TRICK_MAX) {
+		return (WDGameFlag)(seen_flag - (FLAG_SEEN_TOY_START - FLAG_TOY_START));
+	} else if (seen_flag >= FLAG_SEEN_TRAVEL_GAME_EASY_START && seen_flag < FLAG_SEEN_HOME_GAME_HARD_MAX) {
+		return (WDGameFlag)(seen_flag - (FLAG_SEEN_TRAVEL_GAME_EASY_START - FLAG_TRAVEL_GAME_EASY_START));
+	} else {
+		return FLAG_MAX;
+	}
+}
+
 
 // Get the current personality of the dog based on the personality scores
 static inline WDPersonality WD_CurrentPersonality(WDSave* sav) {

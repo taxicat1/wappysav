@@ -191,9 +191,9 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 	dst->musicVolume = read8(&src_bytes);
 	dst->soundVolume = read8(&src_bytes);
 	
-	dst->travelModeColor = read8(&src_bytes);
+	dst->travelModeColor     = read8(&src_bytes);
 	dst->travelModeAccessory = read8(&src_bytes);
-	dst->travelModeRoom = read8(&src_bytes);
+	dst->travelModeRoom      = read8(&src_bytes);
 	
 	dst->age = read8(&src_bytes);
 	dst->mood = (int16_t)read16(&src_bytes);
@@ -202,16 +202,16 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 		dst->personality[i] = read8(&src_bytes);
 	}
 	
-	dst->friendship = read16(&src_bytes);
+	dst->friendship     = read16(&src_bytes);
 	dst->fieldshipLevel = read8(&src_bytes);
 	
-	dst->_unk4D = read8(&src_bytes); // Unknown byte
+	dst->pad4D = read8(&src_bytes); // Padding byte
 	
-	dst->hunger = read16(&src_bytes);
+	dst->fullness    = read16(&src_bytes);
 	dst->cleanliness = read16(&src_bytes);
 	
 	for (int i = 0; i < 2; i++) {
-		dst->_unk52[i] = read8(&src_bytes); // Unknown 2 bytes
+		dst->pad52[i] = read8(&src_bytes); // Padding 2 bytes
 	}
 	
 	dst->playTime = read32(&src_bytes);
@@ -222,21 +222,21 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 		}
 	}
 	
-	dst->unk94 = read8(&src_bytes);
-	dst->minigameWinCount = read8(&src_bytes);
-	dst->unk96 = read8(&src_bytes);
-	dst->fedCount = read8(&src_bytes);
-	dst->minigamePlayCount = read8(&src_bytes);
-	dst->petCount = read8(&src_bytes);
-	dst->messageSentCount = read8(&src_bytes);
-	dst->playCount = read8(&src_bytes);
+	dst->messageReceivedCount = read8(&src_bytes);
+	dst->minigameWinCount     = read8(&src_bytes);
+	dst->fullyCleanedCount    = read8(&src_bytes);
+	dst->fedCount             = read8(&src_bytes);
+	dst->minigamePlayCount    = read8(&src_bytes);
+	dst->petCount             = read8(&src_bytes);
+	dst->messageSentCount     = read8(&src_bytes);
+	dst->playCount            = read8(&src_bytes);
 	
 	for (int i = 0; i < TRICK_MAX; i++) {
 		dst->trickCount[i] = read8(&src_bytes);
 	}
 	
 	for (int i = 0; i < 6; i++) {
-		dst->_unkB2[i] = read8(&src_bytes); // Unknown 6 bytes
+		dst->padB2[i] = read8(&src_bytes); // Padding 6 bytes
 	}
 }
 
@@ -267,13 +267,13 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	write16(&dst_bytes, src->friendship);
 	write8(&dst_bytes, src->fieldshipLevel);
 	
-	write8(&dst_bytes, src->_unk4D); // Unknown byte
+	write8(&dst_bytes, src->pad4D); // Padding byte
 	
-	write16(&dst_bytes, src->hunger);
+	write16(&dst_bytes, src->fullness);
 	write16(&dst_bytes, src->cleanliness);
 	
 	for (int i = 0; i < 2; i++) {
-		write8(&dst_bytes, src->_unk52[i]); // Unknown 2 bytes
+		write8(&dst_bytes, src->pad52[i]); // Padding 2 bytes
 	}
 	
 	write32(&dst_bytes, src->playTime);
@@ -284,9 +284,9 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 		}
 	}
 	
-	write8(&dst_bytes, src->unk94);
+	write8(&dst_bytes, src->messageReceivedCount);
 	write8(&dst_bytes, src->minigameWinCount);
-	write8(&dst_bytes, src->unk96);
+	write8(&dst_bytes, src->fullyCleanedCount);
 	write8(&dst_bytes, src->fedCount);
 	write8(&dst_bytes, src->minigamePlayCount);
 	write8(&dst_bytes, src->petCount);
@@ -298,7 +298,7 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	}
 	
 	for (int i = 0; i < 6; i++) {
-		write8(&dst_bytes, src->_unkB2[i]); // Unknown 6 bytes
+		write8(&dst_bytes, src->padB2[i]); // Padding 6 bytes
 	}
 }
 
