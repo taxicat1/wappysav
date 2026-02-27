@@ -38,7 +38,7 @@ typedef struct {
 	uint8_t     minigamePlayCount;                               // Number of times the player has played any minigame (max 255)
 	uint8_t     petCount;                                        // Number of times the player has pet Wappy (max 255)
 	uint8_t     messageSentCount;                                // Number of times the player has sent any message to Wappy in home mode (max 255)
-	uint8_t     playCount;                                       // Number of times the player has played with Wappy with any toy (max 255)
+	uint8_t     toyPlayCount;                                    // Number of times the player has played with Wappy with any toy (max 255)
 	uint8_t     trickCount[TRICK_MAX];                           // Number of times Wappy has randomly performed each trick (max 255), see WDTrick
 	uint8_t     padB2[6];                                        // Apparently structure padding (always 0x00s)
 } WDSave;
@@ -85,7 +85,6 @@ static inline WDGameFlag WD_SeenFlagFor(WDGameFlag unlock) {
 	}
 }
 
-
 // Turn a seen flag for an unlock (eg FLAG_SEEN_TRICK_CLAP) into the flag for that unlock (FLAG_TRICK_CLAP)
 // If the flag is not a seen flag, FLAG_MAX is returned
 static inline WDGameFlag WD_UnlockFlagFor(WDGameFlag seen_flag) {
@@ -97,7 +96,6 @@ static inline WDGameFlag WD_UnlockFlagFor(WDGameFlag seen_flag) {
 		return FLAG_MAX;
 	}
 }
-
 
 // Get the current personality of the dog based on the personality scores
 static inline WDPersonality WD_CurrentPersonality(WDSave* sav) {

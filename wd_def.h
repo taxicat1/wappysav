@@ -916,25 +916,33 @@ static const char* WDColorStr[] = {
 
 typedef enum {
 	ACCESSORY_START = 0,
+	
 	ACCESSORY_NONE = 0,                                    // 0
+	
 	ACCESSORY_WAPPY_BADGE_1,                               // 1
 	ACCESSORY_WAPPY_BADGE_2,                               // 2
 	ACCESSORY_WAPPY_BADGE_3,                               // 3
+	
 	ACCESSORY_STAR_1,                                      // 4
 	ACCESSORY_STAR_2,                                      // 5
 	ACCESSORY_STAR_3,                                      // 6
+	
 	ACCESSORY_HEART_1,                                     // 7
 	ACCESSORY_HEART_2,                                     // 8
 	ACCESSORY_HEART_3,                                     // 9
+	
 	ACCESSORY_FLOWER_1,                                    // 10
 	ACCESSORY_FLOWER_2,                                    // 11
 	ACCESSORY_FLOWER_3,                                    // 12
+	
 	ACCESSORY_RIBBON_1,                                    // 13
 	ACCESSORY_RIBBON_2,                                    // 14
 	ACCESSORY_RIBBON_3,                                    // 15
+	
 	ACCESSORY_BUTTERFLY_1,                                 // 16
 	ACCESSORY_BUTTERFLY_2,                                 // 17
 	ACCESSORY_BUTTERFLY_3,                                 // 18
+	
 	ACCESSORY_MAX
 } WDAccessory;
 
