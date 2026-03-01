@@ -202,8 +202,8 @@ static void deserializeSaveData(WDSave* dst, const uint8_t* src_bytes) {
 		dst->personality[i] = read8(&src_bytes);
 	}
 	
-	dst->friendship     = read16(&src_bytes);
-	dst->fieldshipLevel = read8(&src_bytes);
+	dst->friendship      = read16(&src_bytes);
+	dst->friendshipLevel = read8(&src_bytes);
 	
 	dst->pad4D = read8(&src_bytes); // Padding byte
 	
@@ -265,7 +265,7 @@ static void serializeSaveData(uint8_t* dst_bytes, const WDSave* src) {
 	}
 	
 	write16(&dst_bytes, src->friendship);
-	write8(&dst_bytes, src->fieldshipLevel);
+	write8(&dst_bytes, src->friendshipLevel);
 	
 	write8(&dst_bytes, src->pad4D); // Padding byte
 	

@@ -24,7 +24,7 @@ typedef struct {
 	int16_t     mood;                                            // -128-127
 	uint8_t     personality[PERSONALITY_MAX];                    // Scores 0-255 for each personality type, see WDPersonality, WD_CurrentPersonality()
 	uint16_t    friendship;                                      // 0-54999
-	uint8_t     fieldshipLevel;                                  // 0-10, updated between screens, set equal to friendship / 5000
+	uint8_t     friendshipLevel;                                 // 0-10, updated between screens, set equal to friendship / 5000
 	uint8_t     pad4D;                                           // Apparently structure padding (always 0x00)
 	uint16_t    fullness;                                        // 0-255, drains over time, feeding increases
 	uint16_t    cleanliness;                                     // 0-255, drains over time, grooming increases
