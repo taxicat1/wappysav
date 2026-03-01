@@ -895,7 +895,7 @@ static const char* WDGameFlagStr[] = {
 
 typedef enum {
 	COLOR_START = 0,
-	COLOR_BLUE,                                            // 0
+	COLOR_SKY_BLUE = 0,                                    // 0
 	COLOR_GREEN,                                           // 1
 	COLOR_RED,                                             // 2
 	COLOR_PINK,                                            // 3
@@ -905,7 +905,7 @@ typedef enum {
 } WDColor;
 
 static const char* WDColorStr[] = {
-	"Sky Blue",                                            // COLOR_BLUE
+	"Sky Blue",                                            // COLOR_SKY_BLUE
 	"Green",                                               // COLOR_GREEN
 	"Red",                                                 // COLOR_RED
 	"Pink",                                                // COLOR_PINK
