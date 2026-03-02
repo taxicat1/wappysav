@@ -36,7 +36,7 @@ MainWindow::~MainWindow()
 void MainWindow::About() {
     QMessageBox about;
     about.setTextFormat(Qt::RichText);
-    about.setText("<p><a href=https://github.com/taxicat1/wappysav>WappySav 0.3.1.</a><br>By <a href=https://github.com/taxicat1>Mow</a> and <a href=https://github.com/pliplupp>Pliplupp</a>.</p>");
+    about.setText("<p><a href=https://github.com/taxicat1/wappysav>WappySav 0.3.2</a><br>By <a href=https://github.com/taxicat1>Mow</a> and <a href=https://github.com/pliplupp>Pliplupp</a>.</p>");
     about.setStandardButtons(QMessageBox::Ok);
     about.setWindowTitle("About WappySav");
     about.setIcon(QMessageBox::Information);
