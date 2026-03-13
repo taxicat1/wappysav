@@ -150,17 +150,18 @@ jobs:
         sudo make install
      
     - name: Install LinuxDeployQt
-      uses: miurahr/install-linuxdeployqt-action@v1.0.1
+      uses: Fryy55/install-linuxdeployqt-action@v1.0.0
+
 
     - name: Deploy
       working-directory: ${{github.workspace}}
-      run: linuxdeployqt-continuous-x86_64.AppImage ./bin
+      run: linuxdeployqt ./bin
    
     - name: upload
       uses: actions/upload-artifact@v6.0.0
       
       with:
-        path: ${{ steps.appimage.outputs.appimage }}
+        path: ${{github.workspace}}/bin
         name: "linux-x86_64"
       
       
