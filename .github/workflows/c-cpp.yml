@@ -81,7 +81,7 @@ jobs:
         path: ${{github.workspace}}/build
         name: "macos-universal-qt5"
 
-   build-mac:
+  build-mac:
 
     runs-on: macos-latest
 
