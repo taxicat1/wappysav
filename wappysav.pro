@@ -28,7 +28,7 @@ mac {
 
 unix {
     isEmpty(PREFIX) {
-        PREFIX = /usr/local
+        PREFIX = .
     }
 
     target.path = $$PREFIX/bin
