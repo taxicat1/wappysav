@@ -141,25 +141,16 @@ jobs:
       working-directory: ${{github.workspace}}
 
       run: |
-        make
-        make install
+        make -j4
      
       
-    - name: deploy
-      id: "deploy"
-      uses: Kidev/Qt-AppImage@v0.0.8
-      with:
-      # Path to folder where Qt installed your project
-        install_folder: ./install
-        app_name: WappySav
-     
-        icon: ${{github.workspace}}/appico.ico
+
     - name: upload
       uses: actions/upload-artifact@v6.0.0
       
       with:
-        path: ${{ steps.deploy.outputs.appimage }}
-        name: "macos-universal-qt6"
+        path: ${{github.workspace}}/build/Release
+        name: "linux-x86_64"
       
       
 
