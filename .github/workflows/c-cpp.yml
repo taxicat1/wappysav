@@ -155,7 +155,7 @@ jobs:
 
     - name: Deploy
       working-directory: ${{github.workspace}}
-      run: linuxdeployqt ./bin
+      run: linuxdeployqt ./bin/wappysav
    
     - name: upload
       uses: actions/upload-artifact@v6.0.0
