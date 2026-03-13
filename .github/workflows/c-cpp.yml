@@ -147,23 +147,18 @@ jobs:
 
       run: |
         make -j4
-        make install
+        sudo make install
      
     - name: Build AppImage
-      run: |
-        wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-        wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-        chmod +x linuxdeploy-x86_64.AppImage
-        chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
-        export QMAKE=qmake
-        export PATH=${{github.workspace}}/Qt/${{env.QT_VERSION}}/gcc_64/libexec:$PATH
-        ./linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun=dist/linux/AppRun --exclude-library "*libpython3*" --plugin qt --output appimage
-
+      uses: Kidev/Qt-AppImage@v0.0.8
+      id: "appimage"
+      with:
+        install_folder: /usr/local/bin/wappysav/      
     - name: upload
       uses: actions/upload-artifact@v6.0.0
       
       with:
-        path: wappysav_Linux_x86_64.AppImage
+        path: ${{ steps.appimage.outputs.appimage }}
         name: "linux-x86_64"
       
       
