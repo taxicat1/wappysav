@@ -153,7 +153,7 @@ jobs:
       uses: Kidev/Qt-AppImage@v0.0.8
       id: "appimage"
       with:
-        install_folder: /usr/local/bin/wappysav/      
+        install_folder: ${{github.workspace}}/bin/wappysav      
     - name: upload
       uses: actions/upload-artifact@v6.0.0
       
