@@ -116,7 +116,7 @@ jobs:
       with:
         path: ${{github.workspace}}/build
         name: "macos-universal-qt6"
-  build-linux-x86:
+  build-linux:
 
     runs-on: ubuntu-latest
 
@@ -149,7 +149,7 @@ jobs:
       uses: actions/upload-artifact@v6.0.0
       
       with:
-        path: ${{github.workspace}}/build/Release
+        path: ${{github.workspace}}/build
         name: "linux-x86_64"
       
       
