@@ -119,9 +119,14 @@ jobs:
   build-linux:
 
     runs-on: ubuntu-latest
+    env:
+      QT_VERSION: 6.10.2
+      BUILD_DIR: build
 
     steps:
     - uses: actions/checkout@v4
+
+    
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
@@ -150,8 +155,8 @@ jobs:
         wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
         chmod +x linuxdeploy-x86_64.AppImage
         chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
-        export QMAKE=${{env.REPO_DIR}}/Qt/${{env.QT_VERSION}}/gcc_64/bin/qmake
-        export PATH=${{env.REPO_DIR}}/Qt/${{env.QT_VERSION}}/gcc_64/libexec:$PATH
+        export QMAKE=qmake
+        export PATH=${{github.workspace}}/Qt/${{env.QT_VERSION}}/gcc_64/libexec:$PATH
         ./linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun=dist/linux/AppRun --exclude-library "*libpython3*" --plugin qt --output appimage
 
     - name: upload
