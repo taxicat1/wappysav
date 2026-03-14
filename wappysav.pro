@@ -28,7 +28,7 @@ mac {
 
 unix {
     isEmpty(PREFIX) {
-        PREFIX = .
+        PREFIX = ./AppDir
     }
 
     target.path = $$PREFIX/bin
