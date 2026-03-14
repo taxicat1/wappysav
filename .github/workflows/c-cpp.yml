@@ -147,22 +147,23 @@ jobs:
 
       run: |
         make -j4
-        sudo make install
+        sudo make install DESTDIR=AppDir
         ls -R
      
-    - name: Install LinuxDeployQt
-      uses: Fryy55/install-linuxdeployqt-action@v1.0.0
-
-
-    - name: Deploy
+    - name: AppImageTool deployment
       working-directory: ${{github.workspace}}
-      run: linuxdeployqt ./bin/wappysav
+      run: |
+        wget -c https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases/expanded_assets/continuous -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+        chmod +x appimagetool-*.AppImage
+        ./appimagetool-*.AppImage -s deploy ./AppDir/usr/share/applications/*.desktop 
+        VERSION=1.0 ./appimagetool-*.AppImage ./AppDir
+
    
     - name: upload
       uses: actions/upload-artifact@v6.0.0
       
       with:
-        path: ${{github.workspace}}/share/applications/misc/wappysav.desktop
+        path: ${{github.workspace}}/AppDir/
         name: "linux-x86_64"
       
       
