@@ -162,7 +162,7 @@ jobs:
         # Avoid shipping the debug information
         find AppDir -name \*.debug -delete
         export QMAKE=qmake
-        sudo ./linuxdeploy-x86_64.AppImage --appdir ${{github.workspace}}/AppDir --custom-apprun=dist/linux/AppRun --exclude-library "*libpython3*" --plugin qt --output appimage
+        ./linuxdeploy-x86_64.AppImage --appdir ${{github.workspace}}/AppDir --custom-apprun=dist/linux/AppRun --exclude-library "*libpython3*" --plugin qt --output appimage
   
 
 
