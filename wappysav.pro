@@ -33,7 +33,7 @@ unix {
 
     target.path = $$PREFIX/bin
 
-    shortcutfiles.files = misc/wappysav.desktop
+    shortcutfiles.files = wappysav.desktop
     shortcutfiles.path = $$PREFIX/share/applications/
     
     data.path = $$PREFIX/share/pixmaps/
