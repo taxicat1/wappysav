@@ -157,7 +157,7 @@ jobs:
         arch: 'linux_gcc_64'   
         tools: 'tools_qtcreator'
         setup-python: false
-        cache: true 
+        cache: false 
         
     - name: qmake
    
