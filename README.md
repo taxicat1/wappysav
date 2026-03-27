@@ -7,7 +7,7 @@ A program for decrypting and encrypting save data from Wappy Dog (DS).
 
 ## Building
 Building requires the Qt libraries and tools installed, which can be obtained from the installer, installed with `aqt`, or built from source. There are two methods to build WappySav.
-(Currently, the program can only be officially compiled for Windows)
+(Currently, the program only has official build instructions for Windows)
 
 Instructions for installing Qt can be found [here](#installing-qt)
 
