@@ -35,8 +35,10 @@ unix {
 
     shortcutfiles.files = wappysav.desktop
     shortcutfiles.path = $$PREFIX/share/applications/
+
+    data.files = wappysav.ico
+    data.path = $$PREFIX/share/icons/
     
-    data.path = $$PREFIX/share/pixmaps/
 
     INSTALLS += shortcutfiles
     INSTALLS += data
