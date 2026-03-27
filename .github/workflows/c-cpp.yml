@@ -193,7 +193,7 @@ jobs:
       uses: actions/upload-artifact@v6.0.0
       
       with:
-        path: ${{github.workspace}}/wappysav_linux_x86_64.AppImage
+        path: ${{github.workspace}}/wappysav_Linux_x86_64.AppImage
         name: "wappysav-linux-x86_64"
       
       
