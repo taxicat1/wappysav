@@ -1,0 +1,15 @@
+# appimage-builder recipe see https://appimage-builder.readthedocs.io for details
+version: 1
+AppDir:
+  path: ./AppDir
+  app_info:
+    id: com.taxicat.wappysav
+    name: Wappysav
+ #   icon: appico.ico
+    version: latest
+    exec: usr/bin/wappysav
+  files:
+    include: []
+AppImage:
+  arch: x86_64
+  update-information: guess
