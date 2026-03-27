@@ -157,7 +157,7 @@ jobs:
         wget -O appimage-builder-x86_64.AppImage https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.1.0/appimage-builder-1.1.0-x86_64.AppImage
         chmod +x appimage-builder-x86_64.AppImage
         sudo mv appimage-builder-x86_64.AppImage /usr/local/bin/appimage-builder
-        cp -a Qt/6.10.2/gcc_64/lib/ ${{github.workspace}}/AppDir/usr/lib
+        cp -a /home/runner/work/wappysav/Qt/6.10.2/gcc_64/lib/ ${{github.workspace}}/AppDir/usr/lib
         cd ${{github.workspace}} && appimage-builder --recipe AppImageBuilder.yml
      
   
