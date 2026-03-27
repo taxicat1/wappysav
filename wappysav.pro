@@ -36,7 +36,7 @@ unix {
     shortcutfiles.files = wappysav.desktop
     shortcutfiles.path = $$PREFIX/share/applications/
 
-    data.files = wappysav.ico
+    data.files = appico.ico
     data.path = $$PREFIX/share/icons/
     
 
