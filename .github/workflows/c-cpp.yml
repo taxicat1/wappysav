@@ -126,6 +126,21 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+
+    - name: dependencies or something
+      run: |
+        sudo apt update
+        sudo apt install \
+          libcurl4-openssl-dev \
+          libfreetype-dev \
+          libfuse2 \
+          libharfbuzz-dev \
+          libpixman-1-dev \
+          libxcursor-dev \
+          libxi-dev \
+          libzstd-dev \
+          zlib1g-dev
+
     
 
     - name: Install Qt
@@ -161,7 +176,8 @@ jobs:
         export OUTPUT=wappysav_Linux_x86_64.AppImage
         # Avoid shipping the debug information
         find AppDir -name \*.debug -delete
-        export QMAKE=/home/runner/work/wappysav/Qt/6.10.2/gcc_64/bin/qmake && ./linuxdeploy-x86_64.AppImage --appdir ${{github.workspace}}/AppDir --plugin qt --output appimage
+        export QMAKE=/home/runner/work/wappysav/Qt/6.10.2/gcc_64/bin/qmake
+        ./linuxdeploy-x86_64.AppImage --appdir ${{github.workspace}}/AppDir --plugin qt --output appimage --exclude-library "*libpython3*"
   
 
 
