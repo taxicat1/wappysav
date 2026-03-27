@@ -147,7 +147,7 @@ jobs:
 
       run: |
         make -j4
-        sudo make install
+        make install
         ls -R
      
      
@@ -161,7 +161,7 @@ jobs:
         export OUTPUT=wappysav_Linux_x86_64.AppImage
         # Avoid shipping the debug information
         find AppDir -name \*.debug -delete
-        export QMAKE=/home/runner/work/wappysav/Qt/6.10.2/gcc_64/bin/qmake && sudo ./linuxdeploy-x86_64.AppImage --appdir ${{github.workspace}}/AppDir --plugin qt --output appimage
+        export QMAKE=/home/runner/work/wappysav/Qt/6.10.2/gcc_64/bin/qmake && ./linuxdeploy-x86_64.AppImage --appdir ${{github.workspace}}/AppDir --plugin qt --output appimage
   
 
 
