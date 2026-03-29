@@ -13,3 +13,4 @@ Makefile.Debug
 Makefile.Release
 *.zip
 ui_*.h
+*.pro.user
