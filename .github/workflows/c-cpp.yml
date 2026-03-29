@@ -2,12 +2,12 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "macos", "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-win:
 
     runs-on: windows-latest
 
@@ -33,7 +33,7 @@ jobs:
     - name: make
       working-directory: ${{github.workspace}}
 
-      run: make
+      run: make -j4
     - name: deploy
       working-directory: ${{github.workspace}}/build/Release
       run: windeployqt.exe ./
@@ -43,7 +43,162 @@ jobs:
       
       with:
         path: ${{github.workspace}}/build
+        name: "wappysav-windows-x86_64"
 
+  build-mac-old:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '5.*.*'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'         
+        
+    - name: qmake
+   
+      working-directory: ${{github.workspace}}
+      run: qmake -makefile 
+      
+    - name: make
+      working-directory: ${{github.workspace}}
+
+      run: make -j4
+    - name: deploy
+      working-directory: ${{github.workspace}}/build/Release
+      run: macdeployqt wappysav.app
+
+    - name: upload
+      uses: actions/upload-artifact@v6.0.0
+      
+      with:
+        path: ${{github.workspace}}/build
+        name: "wappysav-macos-x86_64-qt5"
+
+  build-mac:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.10.2'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'         
+        
+    - name: qmake
+   
+      working-directory: ${{github.workspace}}
+      run: qmake -makefile QMAKE_APPLE_DEVICE_ARCHS="x86_64 arm64"
+      
+    - name: make
+      working-directory: ${{github.workspace}}
+
+      run: make -j4
+    - name: deploy
+      working-directory: ${{github.workspace}}/build/Release
+      run: macdeployqt wappysav.app
+
+    - name: upload
+      uses: actions/upload-artifact@v6.0.0
+      
+      with:
+        path: ${{github.workspace}}/build
+        name: "wappysav-macos-universal-qt6"
+  build-linux:
+
+    runs-on: ubuntu-22.04
+    env:
+      QT_VERSION: 6.10.2
+      BUILD_DIR: build
+
+    steps:
+    - uses: actions/checkout@v4
+
+
+    - name: dependencies or something
+      run: |
+        sudo apt update
+        sudo apt install \
+          libcurl4-openssl-dev \
+          libfreetype-dev \
+          libfuse2 \
+          libharfbuzz-dev \
+          libpixman-1-dev \
+          libxcursor-dev \
+          libxi-dev \
+          libzstd-dev \
+          zlib1g-dev \
+          libxcb-cursor0
+
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        max-size: 250M
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '6.10.2'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'   
+        tools: 'tools_qtcreator'
+        setup-python: false
+        cache: false 
+        
+    - name: qmake
+   
+      working-directory: ${{github.workspace}}
+      run: qmake -makefile
+      
+    - name: make
+      working-directory: ${{github.workspace}}
+
+      run: |
+        make -j4
+        make install
+        ls -R
+     
+     
+    - name: Build AppImage
+      run: |
+        wget --no-verbose "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        wget --no-verbose "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
+        chmod +x linuxdeploy*.AppImage
+        export EXTRA_QT_PLUGINS=svg
+        export LD_LIBRARY_PATH=${QT_ROOT_DIR}/lib:$PWD/AppDir/usr/lib
+        export OUTPUT=wappysav_Linux_x86_64.AppImage
+        # Avoid shipping the debug information
+        find AppDir -name \*.debug -delete
+        export QMAKE=/home/runner/work/wappysav/Qt/6.10.2/gcc_64/bin/qmake
+        ./linuxdeploy-x86_64.AppImage --appdir ${{github.workspace}}/AppDir --plugin qt --output appimage --exclude-library "*libpython3*"
+  
+
+
+   
+    - name: upload
+      uses: actions/upload-artifact@v6.0.0
+      
+      with:
+        path: ${{github.workspace}}/wappysav_Linux_x86_64.AppImage
+        name: "wappysav-linux-x86_64"
+      
+      
+
+      
 
       
 
